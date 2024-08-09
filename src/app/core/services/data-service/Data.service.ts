@@ -22,6 +22,12 @@ export class DataService<T> {
       .pipe(catchError(ErrorHandler.getErrorMessage));
   }
 
+  getById(id: number): Observable<T> {
+    return this.http
+      .get<T>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(ErrorHandler.getErrorMessage));
+  }
+
   create(entity: T): Observable<T> {
     return this.http
       .post<T>(`${this.baseUrl}`, entity)
