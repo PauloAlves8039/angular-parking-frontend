@@ -1,2 +1,89 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/buttons';
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+
+:root {
+  --primary-color: #00BFFF;
+  --secundary-color: #03f3f3;
+  --info-color: #1E90FF;
+  --success-color: #00CD00;
+  --danger-color: #FF4500;
+  --warning-color: #FFB90F;
+  --neutral-color-light: #FFFFFF;
+  --neutral-color-medium: #9C9C9C;
+  --neutral-color-dark: #f7f4f4;
+  --dark-color: #000000;
+  --background-transparent: rgba(0, 0, 0, 0.5);
+}
+
+:root {
+  --small-spacing: 4px;
+  --medium-spacing: 8px;
+  --large-spacing: 16px;
+  --extra-large-spacing: 60px;
+}
+
+.main {
+  margin-bottom: var(--extra-large-spacing);
+}
+
+.page-title, .page-subtitle {
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.input-form {
+  &--sm-1 {
+    width: 100px;
+  }
+  &--sm-2 {
+    width: 120px;
+  }
+  &--sm-3 {
+    width: 150px;
+  }
+}
+
+@mixin button-style($bg-color, $text-color) {
+  background-color: var(--neutral-color-light);
+  color: $text-color;
+  border: 1px solid var(--neutral-color-medium);
+  border-radius: 4px;
+  &:hover {
+    background-color: $bg-color;
+    color: var(--neutral-color-light);
+  }
+}
+
+.button-form-1 {
+  width: 170px;
+  @include button-style(var(--neutral-color-medium), var(--neutral-color-medium));
+}
+
+.button-form-2 {
+  width: 220px;
+  @include button-style(var(--neutral-color-medium), var(--neutral-color-medium));
+}
+
+.button-success {
+  @include button-style(var(--success-color), var(--success-color));
+}
+
+.button-info {
+  @include button-style(var(--info-color), var(--info-color));
+}
+
+.button-warning {
+  @include button-style(var(--warning-color), var(--warning-color));
+}
+
+.button-danger {
+  @include button-style(var(--danger-color), var(--danger-color));
+}
+
+.button-cancel {
+  @include button-style(var(--dark-color), var(--dark-color));
+}
