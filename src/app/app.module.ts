@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HomeModule } from './modules/home/home.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    HomeModule
   ],
   providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'}],
   bootstrap: [AppComponent]
