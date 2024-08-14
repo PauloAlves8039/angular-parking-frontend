@@ -17,11 +17,19 @@
         </td>
         <td>
           <button type="button"
-                  class="btn btn-primary btn-sm me-1"
+                  class="btn btn-warning btn-sm me-1"
                   (click)="onUpdate(item)"
                   title="Update">
             <i class="bi bi-pencil-square"></i>
           </button>
+
+          <button *ngIf="showPdfButton" type="button"
+                  class="btn btn-primary btn-sm me-1"
+                  (click)="onGeneratePdf(item)"
+                  title="Generate Ticket">
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+          </button>
+
           <button type="button"
                   class="btn btn-danger btn-sm"
                   (click)="onDelete(item)"

@@ -9,8 +9,10 @@ import { ColumnConfig } from '../../utils/column-config';
 export class BaseTableComponent implements OnInit {
   @Input() data: any[] = [];
   @Input() columns: ColumnConfig[] = [];
+  @Input() showPdfButton: boolean = false;
   @Output() update = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
+  @Output() generatePdf = new EventEmitter<any>();
 
   constructor() {}
 
@@ -22,5 +24,9 @@ export class BaseTableComponent implements OnInit {
 
   onDelete(item: any) {
     this.delete.emit(item);
+  }
+
+  onGeneratePdf(item: any) {
+    this.generatePdf.emit(item);
   }
 }
