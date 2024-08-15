@@ -5,12 +5,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { BaseTableComponent } from './components/base-table/base-table.component';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     FooterComponent,
-    LoadingComponent
+    LoadingComponent,
+    BaseTableComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { LoadingComponent } from './components/loading/loading.component';
   exports: [
     NavbarComponent,
     FooterComponent,
-    LoadingComponent
+    LoadingComponent,
+    BaseTableComponent
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,46 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th *ngFor="let column of columns">{{ column.header }}</th>
+        <th scope="col">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td *ngFor="let column of columns">
+          <ng-container [ngSwitch]="column.pipe">
+            <span *ngSwitchCase="'date'">{{ item[column.key] | date }}</span>
+            <span *ngSwitchCase="'currency'">{{ item[column.key] | currency }}</span>
+            <span *ngSwitchDefault>{{ item[column.key] }}</span>
+          </ng-container>
+        </td>
+        <td>
+          <button type="button"
+                  class="btn btn-warning btn-sm me-1"
+                  (click)="onUpdate(item)"
+                  title="Update">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+
+          <button *ngIf="showPdfButton" type="button"
+                  class="btn btn-primary btn-sm me-1"
+                  (click)="onGeneratePdf(item)"
+                  title="Generate Ticket">
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+          </button>
+
+          <button type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="onDelete(item)"
+                  title="Delete">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="data.length === 0">
+        <td [attr.colspan]="columns.length + 1" class="text-center">No data found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
