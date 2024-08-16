@@ -1,0 +1,8 @@
+<div class="mt-2">
+  <app-base-table
+    [data]="address"
+    [columns]="columns"
+    (update)="onUpdate($event)"
+    (delete)="onDelete($event)">
+  </app-base-table>
+</div>
