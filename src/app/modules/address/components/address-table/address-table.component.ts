@@ -9,6 +9,9 @@ import { AddressService } from '../../../../core/services/address/Address.servic
 })
 export class AddressTableComponent implements OnInit {
   address: Address[] = [];
+  newAddress: Address = new Address();
+  addressToUpdate: Address = new Address();
+  timeValueModal: number = 200;
 
   columns = [
     { key: 'street', header: 'Logradouro' },
@@ -26,6 +29,17 @@ export class AddressTableComponent implements OnInit {
     this.getAllAddress();
   }
 
+  onUpdate(address: Address) {
+    this.openModalUpdate();
+    this.addressToUpdate = { ...address };
+  }
+
+  onDelete(address: Address) {
+    if (confirm(`Você realmente deseja excluir o endereço ${address.street}?`)) {
+      this.delete(address.id);
+    }
+  }
+
   getAllAddress() {
     this.addressService.getAll().subscribe(
       (address) => {
@@ -37,11 +51,55 @@ export class AddressTableComponent implements OnInit {
     );
   }
 
-  onUpdate(address: Address) {
-    console.log(`Updating Address ${address}`);
+  save() {
+
   }
 
-  onDelete(address: Address) {
-    console.log(`Deleting Address ${address}`);
+  update() {
+
+  }
+
+  delete(id: number) {
+    
+  }
+
+  openModal() {
+    const modalElement = document.getElementById('addressModalSave');
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
+        modalElement
+      );
+      modalInstance.show();
+    }
+  }
+
+  closeModal() {
+    const modalElement = document.getElementById('addressModalSave');
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
+        modalElement
+      );
+      modalInstance.hide();
+    }
+  }
+
+  openModalUpdate() {
+    const modalElement = document.getElementById('addressModalUpdate');
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
+        modalElement
+      );
+      modalInstance.show();
+    }
+  }
+
+  closeModalUpdate() {
+    const modalElement = document.getElementById('addressModalUpdate');
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
+        modalElement
+      );
+      modalInstance.hide();
+    }
   }
 }

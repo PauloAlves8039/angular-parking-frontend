@@ -1,8 +1,159 @@
 <div class="mt-2">
+
+  <div class="mb-1">
+    <button type="button" class="btn btn-primary mb-3" (click)="openModal()">Adicionar Novo Endereço</button>
+  </div>
+
   <app-base-table
     [data]="address"
     [columns]="columns"
     (update)="onUpdate($event)"
     (delete)="onDelete($event)">
   </app-base-table>
+</div>
+
+<div class="modal fade" id="addressModalSave" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addressModalLabel">Novo Endereço</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="street" class="form-label">Logradouro</label>
+                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="newAddress.street">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="number" class="form-label">Número</label>
+                <input type="text" id="number" name="number" class="form-control" [(ngModel)]="newAddress.number">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="complement" class="form-label">Complemento</label>
+                <input type="text" id="complement" name="complement" class="form-control" [(ngModel)]="newAddress.complement">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="neighborhood" class="form-label">Bairro</label>
+                <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="newAddress.neighborhood">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="federativeUnit" class="form-label">Estado</label>
+                <input type="text" id="federativeUnit" name="federativeUnit" class="form-control" [(ngModel)]="newAddress.federativeUnit">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="city" class="form-label">Cidade</label>
+                <input type="text" id="city" name="city" class="form-control" [(ngModel)]="newAddress.city">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="zipCode" class="form-label">CEP</label>
+                <input type="text" id="zipCode" name="zipCode" class="form-control" [(ngModel)]="newAddress.zipCode">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn button-cancel"
+                data-bs-dismiss="modal"
+                title="Close">
+          <i class="bi bi-x-square-fill"></i>
+        </button>
+        <button type="button"
+                class="btn button-success"
+                title="Save"
+                (click)="save()">
+          <i class="bi bi-floppy-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addressModalUpdate" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addressModalLabel">Atualizar Endereço</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="street" class="form-label">Logradouro</label>
+                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="addressToUpdate.street">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="number" class="form-label">Número</label>
+                <input type="text" id="number" name="number" class="form-control" [(ngModel)]="addressToUpdate.number">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="complement" class="form-label">Complemento</label>
+                <input type="text" id="complement" name="complement" class="form-control" [(ngModel)]="addressToUpdate.complement">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="neighborhood" class="form-label">Bairro</label>
+                <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="addressToUpdate.neighborhood">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="federativeUnit" class="form-label">Estado</label>
+                <input type="text" id="federativeUnit" name="federativeUnit" class="form-control" [(ngModel)]="addressToUpdate.federativeUnit">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="city" class="form-label">Cidade</label>
+                <input type="text" id="city" name="city" class="form-control" [(ngModel)]="addressToUpdate.city">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="zipCode" class="form-label">CEP</label>
+                <input type="text" id="zipCode" name="zipCode" class="form-control" [(ngModel)]="addressToUpdate.zipCode">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn button-cancel"
+                data-bs-dismiss="modal"
+                title="Close">
+          <i class="bi bi-x-square-fill"></i>
+        </button>
+        <button type="button"
+                class="btn button-success"
+                title="Update"
+                (click)="update()">
+          <i class="bi bi-floppy-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
