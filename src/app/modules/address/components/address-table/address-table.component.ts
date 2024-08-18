@@ -52,15 +52,45 @@ export class AddressTableComponent implements OnInit {
   }
 
   save() {
-
+    this.addressService.create(this.newAddress).subscribe(
+      (response) => {
+        console.log('Address added successfully', response);
+        this.getAllAddress();
+        this.newAddress = new Address();
+        setTimeout(() => this.closeModal(), this.timeValueModal);
+      },
+      (error) => {
+        console.error(`Error adding address ${error}`);
+      }
+    );
   }
 
   update() {
-
+    this.addressService
+      .update(this.addressToUpdate.id, this.addressToUpdate)
+      .subscribe(
+        (response) => {
+          console.log('Address updated successfully', response);
+          this.getAllAddress();
+          this.addressToUpdate = new Address();
+          setTimeout(() => this.closeModalUpdate(), this.timeValueModal);
+        },
+        (error) => {
+          console.error(`Error updating address ${error}`);
+        }
+      );
   }
 
   delete(id: number) {
-    
+    this.addressService.delete(id).subscribe(
+      () => {
+        console.log('Address deleted successfully');
+        this.getAllAddress();
+      },
+      (error) => {
+        console.error(`Error deleting address ${error}`);
+      }
+    );
   }
 
   openModal() {
