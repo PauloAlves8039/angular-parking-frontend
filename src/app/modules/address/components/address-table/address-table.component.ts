@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Address } from '../../../../core/models/Address';
 import { AddressService } from '../../../../core/services/address/Address.service';
-import { ModalService } from '../../../services/modal.service';
+import { ModalService } from '../../../services/modal/modal.service';
 
 @Component({
   selector: 'app-address-table',
