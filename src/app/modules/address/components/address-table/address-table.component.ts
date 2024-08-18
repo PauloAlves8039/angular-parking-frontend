@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Address } from '../../../../core/models/Address';
 import { AddressService } from '../../../../core/services/address/Address.service';
+import { ModalService } from '../../../services/modal.service';
 
 @Component({
   selector: 'app-address-table',
@@ -8,9 +9,9 @@ import { AddressService } from '../../../../core/services/address/Address.servic
   styleUrls: ['./address-table.component.scss'],
 })
 export class AddressTableComponent implements OnInit {
-  address: Address[] = [];
-  newAddress: Address = new Address();
-  addressToUpdate: Address = new Address();
+  addresses: Address[] = [];
+  address: Address = new Address();
+  isUpdateMode: boolean = false;
   timeValueModal: number = 200;
 
   columns = [
@@ -23,15 +24,20 @@ export class AddressTableComponent implements OnInit {
     { key: 'zipCode', header: 'CEP' },
   ];
 
-  constructor(private addressService: AddressService) {}
+  private modalIdAddress: string = 'addressModal';
+
+  constructor(
+    private addressService: AddressService,
+    private modalService: ModalService) {}
 
   ngOnInit() {
-    this.getAllAddress();
+    this.getAllAddresses();
   }
 
   onUpdate(address: Address) {
-    this.openModalUpdate();
-    this.addressToUpdate = { ...address };
+    this.isUpdateMode = true;
+    this.address = { ...address };
+    this.openModal();
   }
 
   onDelete(address: Address) {
@@ -40,96 +46,80 @@ export class AddressTableComponent implements OnInit {
     }
   }
 
-  getAllAddress() {
+  getAllAddresses() {
     this.addressService.getAll().subscribe(
-      (address) => {
-        this.address = address;
+      (addresses) => {
+        this.addresses = addresses;
       },
       (error) => {
-        console.error(`Error loading all Address ${error}`);
+        console.error(`Erro ao carregar todos os endereços: ${error}`);
       }
     );
   }
 
+  saveOrUpdate() {
+    if (this.isUpdateMode) {
+      this.update();
+    } else {
+      this.save();
+    }
+  }
+
   save() {
-    this.addressService.create(this.newAddress).subscribe(
+    this.addressService.create(this.address).subscribe(
       (response) => {
-        console.log('Address added successfully', response);
-        this.getAllAddress();
-        this.newAddress = new Address();
-        setTimeout(() => this.closeModal(), this.timeValueModal);
+        this.getAllAddresses();
+        this.resetModal();
       },
       (error) => {
-        console.error(`Error adding address ${error}`);
+        console.error(`Erro ao adicionar endereço: ${error}`);
       }
     );
   }
 
   update() {
-    this.addressService
-      .update(this.addressToUpdate.id, this.addressToUpdate)
-      .subscribe(
-        (response) => {
-          console.log('Address updated successfully', response);
-          this.getAllAddress();
-          this.addressToUpdate = new Address();
-          setTimeout(() => this.closeModalUpdate(), this.timeValueModal);
-        },
-        (error) => {
-          console.error(`Error updating address ${error}`);
-        }
-      );
+    this.addressService.update(this.address.id, this.address).subscribe(
+      (response) => {
+        this.getAllAddresses();
+        this.resetModal();
+      },
+      (error) => {
+        console.error(`Erro ao atualizar endereço: ${error}`);
+      }
+    );
   }
 
   delete(id: number) {
     this.addressService.delete(id).subscribe(
       () => {
-        console.log('Address deleted successfully');
-        this.getAllAddress();
+        this.getAllAddresses();
       },
       (error) => {
-        console.error(`Error deleting address ${error}`);
+        console.error(`Erro ao excluir endereços: ${error}`);
       }
     );
   }
 
+  openCreateModal() {
+    this.isUpdateMode = false;
+    this.address = new Address();
+    this.openModal();
+  }
+
   openModal() {
-    const modalElement = document.getElementById('addressModalSave');
-    if (modalElement) {
-      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
-        modalElement
-      );
-      modalInstance.show();
-    }
+    this.modalService.openModal(this.modalIdAddress);
   }
 
   closeModal() {
-    const modalElement = document.getElementById('addressModalSave');
-    if (modalElement) {
-      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
-        modalElement
-      );
-      modalInstance.hide();
-    }
+    this.modalService.closeModal(this.modalIdAddress);
   }
 
-  openModalUpdate() {
-    const modalElement = document.getElementById('addressModalUpdate');
-    if (modalElement) {
-      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
-        modalElement
-      );
-      modalInstance.show();
-    }
-  }
-
-  closeModalUpdate() {
-    const modalElement = document.getElementById('addressModalUpdate');
-    if (modalElement) {
-      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(
-        modalElement
-      );
-      modalInstance.hide();
-    }
+  resetModal() {
+    this.modalService.resetModal<Address>(
+      this.modalIdAddress,
+      this.address,
+      () => new Address(),
+      this.timeValueModal
+    );
   }
 }
