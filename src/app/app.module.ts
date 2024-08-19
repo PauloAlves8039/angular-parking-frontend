@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './modules/home/home.module';
 import { SharedModule } from './shared/shared.module';
+import { AddressModule } from './modules/address/address.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SharedModule } from './shared/shared.module';
     AppRoutingModule,
     HttpClientModule,
     HomeModule,
-    SharedModule
+    SharedModule,
+    AddressModule
   ],
   providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'}],
   bootstrap: [AppComponent]
