@@ -1,12 +1,24 @@
 <div class="mt-2">
-  <div class="mb-1">
-    <button type="button" class="btn button-info mb-3" (click)="openCreateModal()">
-      <i class="bi bi-plus-square-fill"></i> Adicionar Endereço
-    </button>
+  <div class="col">
+    <div class="d-flex">
+      <div class="ms-2">
+        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchAddresses()">
+      </div>
+      <div class="ms-2">
+        <button class="btn button-cancel mb-3 button-search" title="Cancelar" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancelar
+        </button>
+      </div>
+      <div class="ms-2">
+        <button type="button" class="btn button-info mb-3 button-search" title="Adicionar Endereço" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Adicionar
+        </button>
+      </div>
+    </div>
   </div>
 
   <app-base-table
-    [data]="addresses"
+    [data]="filteredAddresses.length ? filteredAddresses : addresses"
     [columns]="columns"
     (update)="onUpdate($event)"
     (delete)="onDelete($event)">

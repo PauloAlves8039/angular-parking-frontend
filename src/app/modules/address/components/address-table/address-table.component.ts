@@ -10,9 +10,11 @@ import { ModalService } from '../../../services/modal/modal.service';
 })
 export class AddressTableComponent implements OnInit {
   addresses: Address[] = [];
+  filteredAddresses: any[] = [];
   address: Address = new Address();
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
+  searchTerm: string = '';
 
   columns = [
     { key: 'street', header: 'Logradouro' },
@@ -28,7 +30,8 @@ export class AddressTableComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
-    private modalService: ModalService) {}
+    private modalService: ModalService
+  ) {}
 
   ngOnInit() {
     this.getAllAddresses();
@@ -41,7 +44,9 @@ export class AddressTableComponent implements OnInit {
   }
 
   onDelete(address: Address) {
-    if (confirm(`Você realmente deseja excluir o endereço ${address.street}?`)) {
+    if (
+      confirm(`Você realmente deseja excluir o endereço ${address.street}?`)
+    ) {
       this.delete(address.id);
     }
   }
@@ -50,11 +55,29 @@ export class AddressTableComponent implements OnInit {
     this.addressService.getAll().subscribe(
       (addresses) => {
         this.addresses = addresses;
+        this.filteredAddresses = [...this.addresses];
       },
       (error) => {
         console.error(`Erro ao carregar todos os endereços: ${error}`);
       }
     );
+  }
+
+  searchAddresses() {
+    if (this.searchTerm.trim() !== '') {
+      this.filteredAddresses = this.addresses.filter(
+        (address: Address) =>
+          address.street.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          address.zipCode.includes(this.searchTerm)
+      );
+    } else {
+      this.filteredAddresses = [...this.addresses];
+    }
+  }
+
+  clearSearchField() {
+    this.searchTerm = '';
+    this.getAllAddresses();
   }
 
   saveOrUpdate() {

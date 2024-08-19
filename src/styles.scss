@@ -58,6 +58,17 @@
   }
 }
 
+.button-search {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.button-search i {
+  margin-right: 2px;
+}
+
 .button-form-1 {
   width: 170px;
   @include button-style(var(--neutral-color-medium), var(--neutral-color-medium));
