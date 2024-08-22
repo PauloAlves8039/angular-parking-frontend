@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './modules/home/home.module';
 import { SharedModule } from './shared/shared.module';
 import { AddressModule } from './modules/address/address.module';
+import { CustomerModule } from './modules/customer/customer.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AddressModule } from './modules/address/address.module';
     HttpClientModule,
     HomeModule,
     SharedModule,
-    AddressModule
+    AddressModule,
+    CustomerModule
   ],
   providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'}],
   bootstrap: [AppComponent]
