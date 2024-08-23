@@ -8,6 +8,7 @@ import { HomeModule } from './modules/home/home.module';
 import { SharedModule } from './shared/shared.module';
 import { AddressModule } from './modules/address/address.module';
 import { CustomerModule } from './modules/customer/customer.module';
+import { VehicleModule } from './modules/vehicle/vehicle.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CustomerModule } from './modules/customer/customer.module';
     HomeModule,
     SharedModule,
     AddressModule,
-    CustomerModule
+    CustomerModule,
+    VehicleModule
   ],
   providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'}],
   bootstrap: [AppComponent]
