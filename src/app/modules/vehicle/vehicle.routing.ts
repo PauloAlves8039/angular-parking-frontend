@@ -1,4 +1,4 @@
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { VehicleHomeComponent } from './pages/vehicle-home/vehicle-home.component';
 
 export const VEHICLE_ROUTES: Routes = [
