@@ -1,3 +1,89 @@
-<p>
-  vehicle-table works!
-</p>
+<div class="mt-2">
+  <div class="col">
+    <div class="d-flex">
+      <div class="ms-2">
+        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchVehicles()">
+      </div>
+      <div class="ms-2">
+        <button class="btn button-cancel mb-3 button-search" title="Cancelar" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancelar
+        </button>
+      </div>
+      <div class="ms-2">
+        <button type="button" class="btn button-info mb-3 button-search" title="Adicionar Veículo" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Adicionar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-base-table
+    [data]="filteredVehicles.length ? filteredVehicles : vehicles"
+    [columns]="columns"
+    (update)="onUpdate($event)"
+    (delete)="onDelete($event)">
+  </app-base-table>
+</div>
+
+<div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="vehicleModalLabel">
+          {{ isUpdateMode ? 'Atualizar Veículo' : 'Adicionar Novo Veículo' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="vehicleType" class="form-label">Tipo</label>
+                <input type="text" id="vehicleType" name="vehicleType" class="form-control" [(ngModel)]="vehicle.vehicleType">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="brand" class="form-label">Marca</label>
+                <input type="text" id="brand" name="brand" class="form-control" [(ngModel)]="vehicle.brand">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="model" class="form-label">Modelo</label>
+                <input type="text" id="model" name="model" class="form-control" [(ngModel)]="vehicle.model">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="color" class="form-label">Cor</label>
+                <input type="text" id="color" name="color" class="form-control" [(ngModel)]="vehicle.color">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="vehicleYear" class="form-label">Ano</label>
+                <input type="number" id="vehicleYear" name="vehicleYear" class="form-control" [(ngModel)]="vehicle.vehicleYear">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="notes" class="form-label">Observações</label>
+                <input type="text" id="notes" name="notes" class="form-control" [(ngModel)]="vehicle.notes">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+          <i class="bi bi-x-square-fill"></i>
+        </button>
+        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
