@@ -55,8 +55,6 @@ export class VehicleTableComponent implements OnInit {
       (vehicles) => {
         this.vehicles = vehicles;
         this.filteredVehicles = [...this.vehicles];
-        console.log(this.vehicles);
-
       },
       (error) => {
         console.error(`Erro ao carregar todos os veículos: ${error}`);
