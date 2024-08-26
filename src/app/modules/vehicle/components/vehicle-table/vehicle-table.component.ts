@@ -21,7 +21,7 @@ export class VehicleTableComponent implements OnInit {
     { key: 'brand', header: 'Marca' },
     { key: 'model', header: 'Modelo' },
     { key: 'color', header: 'Cor' },
-    { key: 'vehicleYear:', header: 'Ano' },
+    { key: 'vehicleYear', header: 'Ano' },
     { key: 'notes', header: 'Observações' },
   ];
 
