@@ -47,6 +47,24 @@
   }
 }
 
+.mb-3 {
+  margin-bottom: var(--medium-spacing) !important;
+}
+
+.form-control {
+  padding: var(--small-spacing);
+  margin-bottom: var(--medium-spacing);
+}
+
+.modal-title {
+  color: var(--primary-color);
+}
+
+.d-flex > .ms-2 {
+  display: flex;
+  align-items: center;
+}
+
 @mixin button-style($bg-color, $text-color) {
   background-color: var(--neutral-color-light);
   color: $text-color;
