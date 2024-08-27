@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CustomerVehicle } from '../../../../core/models/CustomerVehicle';
 import { CustomerVehicleService } from '../../../../core/services/customer-vehicle/CustomerVehicle.service';
-import { ModalService } from '../../../services/modal/modal.service';
+import { ModalService } from '../../../../shared/services/modal/modal.service';
 
 @Component({
   selector: 'app-customer-vehicle-table',

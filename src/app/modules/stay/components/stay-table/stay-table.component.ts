@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Stay } from '../../../../core/models/Stay';
 import { StayService } from '../../../../core/services/stay/Stay.service';
-import { ModalService } from '../../../services/modal/modal.service';
+import { ModalService } from '../../../../shared/services/modal/modal.service';
 
 @Component({
   selector: 'app-stay-table',
