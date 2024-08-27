@@ -10,6 +10,7 @@ import { AddressModule } from './modules/address/address.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { CustomerVehicleModule } from './modules/customer-vehicle/customer-vehicle.module';
+import { StayModule } from './modules/stay/stay.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CustomerVehicleModule } from './modules/customer-vehicle/customer-vehic
     AddressModule,
     CustomerModule,
     VehicleModule,
-    CustomerVehicleModule
+    CustomerVehicleModule,
+    StayModule,
   ],
   providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'}],
   bootstrap: [AppComponent]
