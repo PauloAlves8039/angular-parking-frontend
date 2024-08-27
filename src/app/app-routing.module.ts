@@ -24,6 +24,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/customer-vehicle/customer-vehicle.module').then(m => m.CustomerVehicleModule)
   },
   {
+    path: 'stay',
+    loadChildren: () => import('./modules/stay/stay.module').then(m => m.StayModule)
+  },
+  {
     path: '',
     redirectTo: '/home',
     pathMatch: 'full'

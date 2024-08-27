@@ -16,32 +16,36 @@ export class DataService<T> {
     this.baseUrl = url;
   }
 
+  protected get httpClient(): HttpClient {
+    return this.http;
+  }
+
   getAll(): Observable<T[]> {
-    return this.http
+    return this.httpClient
       .get<T[]>(`${this.baseUrl}`)
       .pipe(catchError(ErrorHandler.getErrorMessage));
   }
 
   getById(id: number): Observable<T> {
-    return this.http
+    return this.httpClient
       .get<T>(`${this.baseUrl}/${id}`)
       .pipe(catchError(ErrorHandler.getErrorMessage));
   }
 
   create(entity: T): Observable<T> {
-    return this.http
+    return this.httpClient
       .post<T>(`${this.baseUrl}`, entity)
       .pipe(catchError(ErrorHandler.getErrorMessage));
   }
 
   update(id: number, entity: T): Observable<T> {
-    return this.http
+    return this.httpClient
       .put<T>(`${this.baseUrl}/${id}`, entity)
       .pipe(catchError(ErrorHandler.getErrorMessage));
   }
 
   delete(id: number): Observable<void> {
-    return this.http
+    return this.httpClient
       .delete<void>(`${this.baseUrl}/${id}`)
       .pipe(catchError(ErrorHandler.getErrorMessage));
   }

@@ -14,7 +14,7 @@ export class Stay extends Entity {
     this.customerVehicleId = 0;
     this.licensePlate = '';
     this.entryDate = new Date();
-    this.exitDate = new Date();
+    this.exitDate = undefined;
     this.hourlyRate = 0;
     this.totalAmount = 0;
     this.stayStatus = '';
