@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ADDRESS_ROUTES } from './address.routing';
 import { SharedModule } from '../../shared/shared.module';
-import { AddressHomeComponent } from './page/address-home/address-home.component';
+import { AddressHomeComponent } from './pages/address-home/address-home.component';
 
 @NgModule({
   declarations: [AddressTableComponent, AddressHomeComponent],
