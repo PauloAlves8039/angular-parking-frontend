@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ColumnConfig } from '../../helpers/config/icolumn-config';
+import { IColumnConfig } from '../../helpers/config/icolumn-config';
 
 @Component({
   selector: 'app-base-table',
@@ -8,7 +8,7 @@ import { ColumnConfig } from '../../helpers/config/icolumn-config';
 })
 export class BaseTableComponent implements OnInit {
   @Input() data: any[] = [];
-  @Input() columns: ColumnConfig[] = [];
+  @Input() columns: IColumnConfig[] = [];
   @Input() showPdfButton: boolean = false;
   @Output() update = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
