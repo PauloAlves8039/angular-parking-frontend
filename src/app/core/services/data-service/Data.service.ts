@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
-import { ErrorHandler } from '../../utils/ErrorHandler';
+import { IDataService } from '../../interfaces/data-service/idata-service';
+import { ErrorHandler } from '../../helpers/error/error-handler';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DataService<T> {
+export class DataService<T> implements IDataService<T> {
   private readonly baseUrl: string;
 
   constructor(

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CustomerHomeComponent } from './page/customer-home/customer-home.component';
+import { CustomerHomeComponent } from './pages/customer-home/customer-home.component';
 import { CustomerTableComponent } from './components/customer-table/customer-table.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';

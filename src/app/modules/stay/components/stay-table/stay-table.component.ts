@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Stay } from '../../../../core/models/Stay';
 import { StayService } from '../../../../core/services/stay/Stay.service';
-import { ModalService } from '../../../services/modal/modal.service';
+import { ModalService } from '../../../../shared/services/modal/modal.service';
+import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-stay-table',
   templateUrl: './stay-table.component.html',
   styleUrls: ['./stay-table.component.scss'],
 })
-export class StayTableComponent implements OnInit {
+export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   stays: Stay[] = [];
   filteredStays: Stay[] = [];
   stay: Stay = new Stay();
@@ -34,47 +36,59 @@ export class StayTableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllStays();
+    this.getAll();
   }
 
-  onUpdate(stay: Stay) {
-    this.isUpdateMode = true;
-    this.stay = { ...stay };
-    this.update(stay);
-  }
-
-  onDelete(stay: Stay) {
-    if (confirm(`Você realmente deseja excluir a permanência ${stay.licensePlate}?`)) {
-      this.delete(stay.id);
+  async getAll() {
+    try {
+      const stays = await lastValueFrom(this.stayService.getAll());
+      this.stays = stays;
+      this.filteredStays = [...this.stays];
+    } catch (error) {
+      console.error(`Error loading all stays: ${error}`);
     }
   }
 
-  onGeneratePdf(stay: Stay) {
-    this.stayService.generatePdf(stay.id).subscribe(
-      (pdfBlob: Blob) => {
-        const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Stay.pdf';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      (error) => {
-        console.error(`Erro ao gerar PDF: ${error}`);
-      }
-    );
+  async save() {
+    try {
+      await lastValueFrom(this.stayService.create(this.stay));
+      this.getAll();
+      this.resetModal();
+    } catch (error) {
+      console.error(`Error adding stay: ${error}`);
+    }
   }
 
-  getAllStays() {
-    this.stayService.getAll().subscribe(
-      (stays) => {
-        this.stays = stays;
-        this.filteredStays = [...this.stays];
-      },
-      (error) => {
-        console.error(`Erro ao carregar todas as Permanências: ${error}`);
-      }
-    );
+  async update(stay: Stay) {
+    try {
+      await lastValueFrom(this.stayService.update(stay.id, stay));
+      this.getAll();
+    } catch (error) {
+      console.error(`Error updating stay: ${error}`);
+    }
+  }
+
+  async delete(id: number) {
+    try {
+      await lastValueFrom(this.stayService.delete(id));
+      this.getAll();
+    } catch (error) {
+      console.error(`Error deleting stay: ${error}`);
+    }
+  }
+
+  async onGeneratePdf(stay: Stay) {
+    try {
+      const pdfBlob: Blob = await lastValueFrom(this.stayService.generatePdf(stay.id));
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Stay.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(`Error generating PDF: ${error}`);
+    }
   }
 
   searchStays() {
@@ -91,41 +105,19 @@ export class StayTableComponent implements OnInit {
 
   clearSearchField() {
     this.searchTerm = '';
-    this.getAllStays();
+    this.getAll();
   }
 
-  save() {
-    this.stayService.create(this.stay).subscribe(
-      (response) => {
-        this.getAllStays();
-        this.resetModal();
-      },
-      (error) => {
-        console.error(`Erro ao adicionar permanência: ${error}`);
-      }
-    );
+  onUpdate(stay: Stay) {
+    this.isUpdateMode = true;
+    this.stay = { ...stay };
+    this.update(stay);
   }
 
-  update(stay: Stay) {
-    this.stayService.update(stay.id, stay).subscribe(
-      (response) => {
-        this.getAllStays();
-      },
-      (error) => {
-        console.error(`Erro ao atualizar permanência: ${error}`);
-      }
-    );
-  }
-
-  delete(id: number) {
-    this.stayService.delete(id).subscribe(
-      () => {
-        this.getAllStays();
-      },
-      (error) => {
-        console.error(`Erro ao excluir permanência: ${error}`);
-      }
-    );
+  onDelete(stay: Stay) {
+    if (confirm(`Do you really want to exclude stay ${stay.licensePlate}?`)) {
+      this.delete(stay.id);
+    }
   }
 
   openCreateModal() {

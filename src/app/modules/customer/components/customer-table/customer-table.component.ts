@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CustomerService } from '../../../../core/services/customer/Customer.service';
-import { ModalService } from '../../../services/modal/modal.service';
 import { Customer } from '../../../../core/models/Customer';
+import { ModalService } from '../../../../shared/services/modal/modal.service';
+import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-customer-table',
   templateUrl: './customer-table.component.html',
   styleUrls: ['./customer-table.component.scss'],
 })
-export class CustomerTableComponent implements OnInit {
+export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
   customer: Customer = new Customer();
@@ -33,31 +35,54 @@ export class CustomerTableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllCustomers();
+    this.getAll();
   }
 
-  onUpdate(customer: Customer) {
-    this.isUpdateMode = true;
-    this.customer = { ...customer };
-    this.openModal();
+  saveOrUpdate() {
+    if (this.isUpdateMode) {
+      this.update();
+    } else {
+      this.save();
+    }
   }
-
-  onDelete(customer: Customer) {
-    if (confirm(`Você realmente deseja excluir o cliente ${customer.name}?`)) {
-      this.delete(customer.id);
+  
+  async getAll() {
+    try {
+      const customers = await lastValueFrom(this.customerService.getAll());
+      this.customers = customers;
+      this.filteredCustomers = [...this.customers];
+    } catch (error) {
+      console.error(`Error loading all customers: ${error}`);
     }
   }
 
-  getAllCustomers() {
-    this.customerService.getAll().subscribe(
-      (customers) => {
-        this.customers = customers;
-        this.filteredCustomers = [...this.customers];
-      },
-      (error) => {
-        console.error(`Erro ao carregar todos os clientes: ${error}`);
-      }
-    );
+  async save() {
+    try {
+      await lastValueFrom(this.customerService.create(this.customer));
+      this.getAll();
+      this.resetModal();
+    } catch (error) {
+      console.error(`Error adding customer: ${error}`);
+    }
+  }
+
+  async update() {
+    try {
+      await lastValueFrom(this.customerService.update(this.customer.id, this.customer));
+      this.getAll();
+      this.resetModal();
+    } catch (error) {
+      console.error(`Error updating customer: ${error}`);
+    }
+  }
+
+  async delete(id: number) {
+    try {
+      await lastValueFrom(this.customerService.delete(id));
+      this.getAll();
+    } catch (error) {
+      console.error(`Error deleting customer: ${error}`);
+    }
   }
 
   searchCustomers() {
@@ -65,7 +90,9 @@ export class CustomerTableComponent implements OnInit {
       this.filteredCustomers = this.customers.filter(
         (customer: Customer) =>
           customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          customer.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          customer.email
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
           customer.phone.includes(this.searchTerm) ||
           customer.cpf.includes(this.searchTerm)
       );
@@ -76,50 +103,19 @@ export class CustomerTableComponent implements OnInit {
 
   clearSearchField() {
     this.searchTerm = '';
-    this.getAllCustomers();
+    this.getAll();
   }
 
-  saveOrUpdate() {
-    if (this.isUpdateMode) {
-      this.update();
-    } else {
-      this.save();
+  onUpdate(customer: Customer) {
+    this.isUpdateMode = true;
+    this.customer = { ...customer };
+    this.openModal();
+  }
+
+  onDelete(customer: Customer) {
+    if (confirm(`Do you really want to delete the customer ${customer.name}?`)) {
+      this.delete(customer.id);
     }
-  }
-
-  save() {
-    this.customerService.create(this.customer).subscribe(
-      (response) => {
-        this.getAllCustomers();
-        this.resetModal();
-      },
-      (error) => {
-        console.error(`Erro ao adicionar cliente: ${error}`);
-      }
-    );
-  }
-
-  update() {
-    this.customerService.update(this.customer.id, this.customer).subscribe(
-      (response) => {
-        this.getAllCustomers();
-        this.resetModal();
-      },
-      (error) => {
-        console.error(`Erro ao atualizar cliente: ${error}`);
-      }
-    );
-  }
-
-  delete(id: number) {
-    this.customerService.delete(id).subscribe(
-      () => {
-        this.getAllCustomers();
-      },
-      (error) => {
-        console.error(`Erro ao excluir cliente: ${error}`);
-      }
-    );
   }
 
   openCreateModal() {
