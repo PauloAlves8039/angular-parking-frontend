@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ColumnConfig } from '../../utils/column-config';
+import { ColumnConfig } from '../../helpers/config/icolumn-config';
 
 @Component({
   selector: 'app-base-table',
