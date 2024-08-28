@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Address } from '../../../../core/models/Address';
 import { AddressService } from '../../../../core/services/address/Address.service';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
+import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-address-table',
   templateUrl: './address-table.component.html',
   styleUrls: ['./address-table.component.scss'],
 })
-export class AddressTableComponent implements OnInit {
+export class AddressTableComponent implements OnInit, BaseComponent<Address> {
   addresses: Address[] = [];
   filteredAddresses: any[] = [];
   address: Address = new Address();
@@ -34,33 +36,54 @@ export class AddressTableComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllAddresses();
+    this.getAll();
   }
 
-  onUpdate(address: Address) {
-    this.isUpdateMode = true;
-    this.address = { ...address };
-    this.openModal();
-  }
-
-  onDelete(address: Address) {
-    if (
-      confirm(`Você realmente deseja excluir o endereço ${address.street}?`)
-    ) {
-      this.delete(address.id);
+  saveOrUpdate() {
+    if (this.isUpdateMode) {
+      this.update();
+    } else {
+      this.save();
     }
   }
 
-  getAllAddresses() {
-    this.addressService.getAll().subscribe(
-      (addresses) => {
-        this.addresses = addresses;
-        this.filteredAddresses = [...this.addresses];
-      },
-      (error) => {
-        console.error(`Erro ao carregar todos os endereços: ${error}`);
-      }
-    );
+  async getAll() {
+    try {
+      const addresses = await lastValueFrom(this.addressService.getAll());
+      this.addresses = addresses;
+      this.filteredAddresses = [...this.addresses];
+    } catch (error) {
+      console.error(`Error loading all addresses: ${error}`);
+    }
+  }
+
+  async save() {
+    try {
+      await lastValueFrom(this.addressService.create(this.address));
+      this.getAll();
+      this.resetModal();
+    } catch (error) {
+      console.error(`Error adding address: ${error}`);
+    }
+  }
+
+  async update() {
+    try {
+      await lastValueFrom(this.addressService.update(this.address.id, this.address));
+      this.getAll();
+      this.resetModal();
+    } catch (error) {
+      console.error(`Error updating address: ${error}`);
+    }
+  }
+
+  async delete(id: number) {
+    try {
+      await lastValueFrom(this.addressService.delete(id));
+      this.getAll();
+    } catch (error) {
+      console.error(`Error deleting address: ${error}`);
+    }
   }
 
   searchAddresses() {
@@ -77,50 +100,21 @@ export class AddressTableComponent implements OnInit {
 
   clearSearchField() {
     this.searchTerm = '';
-    this.getAllAddresses();
+    this.getAll();
   }
 
-  saveOrUpdate() {
-    if (this.isUpdateMode) {
-      this.update();
-    } else {
-      this.save();
+  onUpdate(address: Address) {
+    this.isUpdateMode = true;
+    this.address = { ...address };
+    this.openModal();
+  }
+
+  onDelete(address: Address) {
+    if (
+      confirm(`Do you really want to delete the address ${address.street}?`)
+    ) {
+      this.delete(address.id);
     }
-  }
-
-  save() {
-    this.addressService.create(this.address).subscribe(
-      (response) => {
-        this.getAllAddresses();
-        this.resetModal();
-      },
-      (error) => {
-        console.error(`Erro ao adicionar endereço: ${error}`);
-      }
-    );
-  }
-
-  update() {
-    this.addressService.update(this.address.id, this.address).subscribe(
-      (response) => {
-        this.getAllAddresses();
-        this.resetModal();
-      },
-      (error) => {
-        console.error(`Erro ao atualizar endereço: ${error}`);
-      }
-    );
-  }
-
-  delete(id: number) {
-    this.addressService.delete(id).subscribe(
-      () => {
-        this.getAllAddresses();
-      },
-      (error) => {
-        console.error(`Erro ao excluir endereços: ${error}`);
-      }
-    );
   }
 
   openCreateModal() {
