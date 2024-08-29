@@ -4,6 +4,7 @@ import { AddressService } from '../../../../core/services/address/Address.servic
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
+import { CheckZipCodeService } from '../../../../shared/services/check-zip-code/CheckZipCode.service';
 
 @Component({
   selector: 'app-address-table',
@@ -28,11 +29,22 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
     { key: 'zipCode', header: 'CEP' },
   ];
 
+  states = [
+    { acronym: 'AC' }, { acronym: 'AL' }, { acronym: 'AP' }, { acronym: 'AM' },
+    { acronym: 'BA' }, { acronym: 'CE' }, { acronym: 'DF' }, { acronym: 'ES' },
+    { acronym: 'GO' }, { acronym: 'MA' }, { acronym: 'MT' }, { acronym: 'MS' },
+    { acronym: 'MG' }, { acronym: 'PA' }, { acronym: 'PB' }, { acronym: 'PR' },
+    { acronym: 'PE' }, { acronym: 'PI' }, { acronym: 'RJ' }, { acronym: 'RN' },
+    { acronym: 'RS' }, { acronym: 'RO' }, { acronym: 'RR' }, { acronym: 'SC' },
+    { acronym: 'SP' }, { acronym: 'SE' }, { acronym: 'TO' }
+  ];
+
   private modalIdAddress: string = 'addressModal';
 
   constructor(
     private addressService: AddressService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private checkZipCodeService: CheckZipCodeService
   ) {}
 
   ngOnInit() {
@@ -86,6 +98,28 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
     }
   }
 
+  async searchZipCode() {
+    try {
+      const result = await lastValueFrom(this.checkZipCodeService.checkZipCode(this.address.zipCode));
+      this.address.street = result.logradouro;
+      this.address.neighborhood = result.bairro;
+      this.address.city = result.localidade;
+      this.address.federativeUnit = result.uf;
+      this.address.zipCode = this.formatZipCode(this.address.zipCode);
+    } catch (error) {
+      alert(`Error searching for ZIP code. Check that the zip code is correct and try again: ${error}`);
+    }
+  }
+
+  formatZipCode(zipCode: string): string {
+    if (!zipCode){
+      return '';
+    }
+
+    const cleaned = zipCode.replace(/\D/g, '');
+    return cleaned.length <= 5 ? cleaned : `${cleaned.slice(0, 5)}-${cleaned.slice(5, 8)}`;
+  }
+
   searchAddresses() {
     if (this.searchTerm.trim() !== '') {
       this.filteredAddresses = this.addresses.filter(
@@ -103,6 +137,12 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
     this.getAll();
   }
 
+  clearModalFields(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.address = new Address();
+  }
+
   onUpdate(address: Address) {
     this.isUpdateMode = true;
     this.address = { ...address };
@@ -110,9 +150,7 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
   }
 
   onDelete(address: Address) {
-    if (
-      confirm(`Do you really want to delete the address ${address.street}?`)
-    ) {
+    if (confirm(`Do you really want to delete the address ${address.street}?`)) {
       this.delete(address.id);
     }
   }
