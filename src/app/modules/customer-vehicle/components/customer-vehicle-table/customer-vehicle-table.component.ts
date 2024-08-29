@@ -4,6 +4,10 @@ import { CustomerVehicleService } from '../../../../core/services/customer-vehic
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
+import { Customer } from '../../../../core/models/Customer';
+import { Vehicle } from '../../../../core/models/Vehicle';
+import { CustomerService } from '../../../../core/services/customer/Customer.service';
+import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
 
 @Component({
   selector: 'app-customer-vehicle-table',
@@ -12,6 +16,8 @@ import { lastValueFrom } from 'rxjs';
 })
 export class CustomerVehicleTableComponent implements OnInit, BaseComponent<CustomerVehicle> {
   customersVehicles: CustomerVehicle[] = [];
+  customers: Customer[] = [];
+  vehicles: Vehicle[] = [];
   filteredCustomerVehicle: CustomerVehicle[] = [];
   customerVehicle: CustomerVehicle = new CustomerVehicle();
   isUpdateMode: boolean = false;
@@ -27,11 +33,14 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
 
   constructor(
     private customerVehicleService: CustomerVehicleService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private customerService: CustomerService,
+    private vehicleService: VehicleService
   ) {}
 
   ngOnInit() {
     this.getAll();
+    this.getCustomersAndVehicles();
   }
 
   saveOrUpdate() {
@@ -81,6 +90,15 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     }
   }
 
+  async getCustomersAndVehicles() {
+    try {
+      this.customers = await lastValueFrom(this.customerService.getAll());
+      this.vehicles = await lastValueFrom(this.vehicleService.getAll());
+    } catch (error) {
+      console.error('Error loading customers or vehicles:', error);
+    }
+  }
+
   searchCustomerVehicle() {
     const searchTermNumber = Number(this.searchTerm.trim());
 
@@ -98,6 +116,12 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
   clearSearchField() {
     this.searchTerm = '';
     this.getAll();
+  }
+
+  clearModalFields(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.customerVehicle = new CustomerVehicle();
   }
 
   onUpdate(customerVehicle: CustomerVehicle) {
