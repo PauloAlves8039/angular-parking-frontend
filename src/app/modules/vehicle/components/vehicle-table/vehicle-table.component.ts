@@ -102,6 +102,12 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
     this.getAll();
   }
 
+  clearModalFields(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.vehicle = new Vehicle();
+  }
+
   onUpdate(vehicle: Vehicle) {
     this.isUpdateMode = true;
     this.vehicle = { ...vehicle };

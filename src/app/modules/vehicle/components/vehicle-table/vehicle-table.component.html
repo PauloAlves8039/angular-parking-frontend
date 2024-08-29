@@ -5,7 +5,7 @@
         <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchVehicles()">
       </div>
       <div class="ms-2">
-        <button class="btn button-cancel mb-3 button-search" title="Cancelar" (click)="clearSearchField()">
+        <button class="btn button-danger button-search mb-3" title="Cancelar" (click)="clearSearchField()">
           <i class="bi bi-x-square"></i> Cancelar
         </button>
       </div>
@@ -40,7 +40,11 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="vehicleType" class="form-label">Tipo</label>
-                <input type="text" id="vehicleType" name="vehicleType" class="form-control" [(ngModel)]="vehicle.vehicleType">
+                <select id="vehicleType" name="vehicleType" class="form-select" [(ngModel)]="vehicle.vehicleType">
+                  <option value="" disabled>Selecione o tipo</option>
+                  <option value="Carro">Carro</option>
+                  <option value="Moto">Moto</option>
+                </select>
               </div>
             </div>
             <div class="col-md-6">
@@ -64,7 +68,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="vehicleYear" class="form-label">Ano</label>
-                <input type="number" id="vehicleYear" name="vehicleYear" class="form-control" [(ngModel)]="vehicle.vehicleYear">
+                <input type="number"
+                       id="vehicleYear"
+                       name="vehicleYear"
+                       class="form-control input-year"
+                       [(ngModel)]="vehicle.vehicleYear"
+                       max="9999"
+                       oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);">
               </div>
             </div>
             <div class="col-md-6">
@@ -77,11 +87,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-x-square-fill"></i>
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Fechar">
+          <i class="bi bi-door-closed-fill"></i> Fechar
         </button>
-        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i>
+        <button type="button" class="btn button-danger" title="Limpar Campos" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Limpar
+        </button>
+        <button type="button" class="btn button-success" title="Salvar" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i> Salvar
         </button>
       </div>
     </div>
