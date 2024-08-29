@@ -70,7 +70,11 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="addressId" class="form-label">Endereço</label>
-                <input type="number" id="addressId" name="addressId" class="form-control" [(ngModel)]="customer.addressId">
+                <select id="addressId" name="addressId" class="form-select" [(ngModel)]="customer.addressId">
+                  <option *ngFor="let address of addresses" [value]="address.id">
+                    {{ address.street }}, {{ address.number }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>

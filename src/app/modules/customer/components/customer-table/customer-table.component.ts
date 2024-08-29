@@ -4,6 +4,8 @@ import { Customer } from '../../../../core/models/Customer';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
+import { AddressService } from '../../../../core/services/address/Address.service';
+import { Address } from '../../../../core/models/Address';
 
 @Component({
   selector: 'app-customer-table',
@@ -12,6 +14,7 @@ import { lastValueFrom } from 'rxjs';
 })
 export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   customers: Customer[] = [];
+  addresses: Address[] = [];
   filteredCustomers: Customer[] = [];
   customer: Customer = new Customer();
   isUpdateMode: boolean = false;
@@ -31,11 +34,13 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
 
   constructor(
     private customerService: CustomerService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private addressService: AddressService
   ) {}
 
   ngOnInit() {
     this.getAll();
+    this.getAllAddresses();
   }
 
   saveOrUpdate() {
@@ -45,7 +50,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
       this.save();
     }
   }
-  
+
   async getAll() {
     try {
       const customers = await lastValueFrom(this.customerService.getAll());
@@ -82,6 +87,15 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
       this.getAll();
     } catch (error) {
       console.error(`Error deleting customer: ${error}`);
+    }
+  }
+
+  async getAllAddresses() {
+    try {
+      const addresses = await lastValueFrom(this.addressService.getAll());
+      this.addresses = addresses;
+    } catch (error) {
+      console.error(`Error loading all addresses: ${error}`);
     }
   }
 
