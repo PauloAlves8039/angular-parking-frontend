@@ -5,12 +5,12 @@
         <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
       </div>
       <div class="ms-2">
-        <button class="btn button-cancel mb-3 button-search" title="Cancelar" (click)="clearSearchField()">
+        <button class="btn button-danger button-search mb-3" title="Cancelar" (click)="clearSearchField()">
           <i class="bi bi-x-square"></i> Cancelar
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info mb-3 button-search" title="Adicionar Cliente" (click)="openCreateModal()">
+        <button type="button" class="btn button-info button-search mb-3" title="Adicionar Cliente" (click)="openCreateModal()">
           <i class="bi bi-plus-square-fill"></i> Adicionar
         </button>
       </div>
@@ -81,11 +81,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-x-square-fill"></i>
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Fechar">
+          <i class="bi bi-door-closed-fill"></i> Fechar
         </button>
-        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i>
+        <button type="button" class="btn button-danger" title="Limpar Campos" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Limpar
+        </button>
+        <button type="button" class="btn button-success" title="Salvar" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i> Salvar
         </button>
       </div>
     </div>

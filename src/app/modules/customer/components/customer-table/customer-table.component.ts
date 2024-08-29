@@ -120,6 +120,12 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
     this.getAll();
   }
 
+  clearModalFields(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.customer = new Customer();
+  }
+
   onUpdate(customer: Customer) {
     this.isUpdateMode = true;
     this.customer = { ...customer };
