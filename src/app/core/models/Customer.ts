@@ -1,3 +1,4 @@
+import { Address } from './Address';
 import { Entity } from './Entity';
 
 export class Customer extends Entity {
@@ -7,6 +8,7 @@ export class Customer extends Entity {
   phone: string;
   email: string;
   addressId: number;
+  address?: Address;
 
   constructor() {
     super();
