@@ -19,16 +19,6 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
   timeValueModal: number = 200;
   searchTerm: string = '';
 
-  columns = [
-    { key: 'street', header: 'Logradouro' },
-    { key: 'number', header: 'Número' },
-    { key: 'complement', header: 'Complemento' },
-    { key: 'neighborhood', header: 'Bairro' },
-    { key: 'federativeUnit', header: 'Estado' },
-    { key: 'city', header: 'Cidade' },
-    { key: 'zipCode', header: 'CEP' },
-  ];
-
   states = [
     { acronym: 'AC' }, { acronym: 'AL' }, { acronym: 'AP' }, { acronym: 'AM' },
     { acronym: 'BA' }, { acronym: 'CE' }, { acronym: 'DF' }, { acronym: 'ES' },

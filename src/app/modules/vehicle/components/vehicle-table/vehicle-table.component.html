@@ -2,27 +2,64 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchVehicles()">
+        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchVehicles()">
       </div>
       <div class="ms-2">
-        <button class="btn button-danger button-search mb-3" title="Cancelar" (click)="clearSearchField()">
-          <i class="bi bi-x-square"></i> Cancelar
+        <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancel
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info mb-3 button-search" title="Adicionar Veículo" (click)="openCreateModal()">
-          <i class="bi bi-plus-square-fill"></i> Adicionar
+        <button type="button" class="btn button-info mb-3 button-search" title="Add" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Add
         </button>
       </div>
     </div>
   </div>
 
-  <app-base-table
-    [data]="filteredVehicles.length ? filteredVehicles : vehicles"
-    [columns]="columns"
-    (update)="onUpdate($event)"
-    (delete)="onDelete($event)">
-  </app-base-table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Type</th>
+          <th>Brand</th>
+          <th>Model</th>
+          <th>Color</th>
+          <th>Year</th>
+          <th>Notes</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of filteredVehicles">
+          <td>{{ vehicle.vehicleType }}</td>
+          <td>{{ vehicle.brand }}</td>
+          <td>{{ vehicle.model }}</td>
+          <td>{{ vehicle.color }}</td>
+          <td>{{ vehicle.vehicleYear }}</td>
+          <td>{{ vehicle.notes || 'N/A' }}</td>
+          <td>
+            <button type="button"
+                    class="btn btn-warning btn-sm me-1"
+                    (click)="onUpdate(vehicle)"
+                    title="Update">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+
+            <button type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="onDelete(vehicle)"
+                    title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredVehicles.length === 0">
+          <td [attr.colspan]="7" class="text-center">No vehicles found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
@@ -30,7 +67,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="vehicleModalLabel">
-          {{ isUpdateMode ? 'Atualizar Veículo' : 'Adicionar Novo Veículo' }}
+          {{ isUpdateMode ? 'Update Vehicle' : 'Add New Vehicle' }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -39,9 +76,9 @@
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="vehicleType" class="form-label">Tipo</label>
+                <label for="vehicleType" class="form-label">Type</label>
                 <select id="vehicleType" name="vehicleType" class="form-select" [(ngModel)]="vehicle.vehicleType">
-                  <option value="" disabled>Selecione o tipo</option>
+                  <option value="" disabled>Select type</option>
                   <option value="Carro">Carro</option>
                   <option value="Moto">Moto</option>
                 </select>
@@ -49,19 +86,19 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="brand" class="form-label">Marca</label>
+                <label for="brand" class="form-label">Brand</label>
                 <input type="text" id="brand" name="brand" class="form-control" [(ngModel)]="vehicle.brand">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="model" class="form-label">Modelo</label>
+                <label for="model" class="form-label">Model</label>
                 <input type="text" id="model" name="model" class="form-control" [(ngModel)]="vehicle.model">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="color" class="form-label">Cor</label>
+                <label for="color" class="form-label">Color</label>
                 <input type="text" id="color" name="color" class="form-control" [(ngModel)]="vehicle.color">
               </div>
             </div>
@@ -79,7 +116,7 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="notes" class="form-label">Observações</label>
+                <label for="notes" class="form-label">Notes</label>
                 <input type="text" id="notes" name="notes" class="form-control" [(ngModel)]="vehicle.notes">
               </div>
             </div>
@@ -87,14 +124,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Fechar">
-          <i class="bi bi-door-closed-fill"></i> Fechar
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+          <i class="bi bi-door-closed-fill"></i> Close
         </button>
-        <button type="button" class="btn button-danger" title="Limpar Campos" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Limpar
+        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Clear
         </button>
-        <button type="button" class="btn button-success" title="Salvar" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Salvar
+        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i> Save
         </button>
       </div>
     </div>

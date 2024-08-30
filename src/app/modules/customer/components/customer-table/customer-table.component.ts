@@ -21,14 +21,14 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   timeValueModal: number = 200;
   searchTerm: string = '';
 
-  columns = [
-    { key: 'name', header: 'Nome' },
-    { key: 'birthDate', header: 'Data de Nascimento' },
-    { key: 'cpf', header: 'CPF' },
-    { key: 'phone', header: 'Telefone' },
-    { key: 'email', header: 'Email' },
-    { key: 'addressId', header: 'Endereço' },
-  ];
+  // columns = [
+  //   { key: 'name', header: 'Nome' },
+  //   { key: 'birthDate', header: 'Data de Nascimento' },
+  //   { key: 'cpf', header: 'CPF' },
+  //   { key: 'phone', header: 'Telefone' },
+  //   { key: 'email', header: 'Email' },
+  //   { key: 'addressId', header: 'Endereço' },
+  // ];
 
   private modalIdCustomer: string = 'customerModal';
 
@@ -54,11 +54,19 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   async getAll() {
     try {
       const customers = await lastValueFrom(this.customerService.getAll());
-      this.customers = customers;
-      this.filteredCustomers = [...this.customers];
+      this.addresses = await lastValueFrom(this.addressService.getAll());
+      this.filteredCustomers = customers.map(customer => {
+        const address = this.getAddressById(customer.addressId);
+        return { ...customer, address };
+      });
     } catch (error) {
       console.error(`Error loading all customers: ${error}`);
     }
+  }
+
+  getAddressById(addressId: number): Address | undefined {
+    const address = this.addresses.find(address => address.id === addressId);
+    return address;
   }
 
   async save() {
@@ -92,8 +100,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
 
   async getAllAddresses() {
     try {
-      const addresses = await lastValueFrom(this.addressService.getAll());
-      this.addresses = addresses;
+      this.addresses = await lastValueFrom(this.addressService.getAll());
     } catch (error) {
       console.error(`Error loading all addresses: ${error}`);
     }

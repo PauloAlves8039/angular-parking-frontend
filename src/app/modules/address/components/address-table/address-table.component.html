@@ -2,27 +2,56 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchAddresses()">
+        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchAddresses()">
       </div>
       <div class="ms-2">
-        <button class="btn button-danger button-search mb-3" title="Cancelar" (click)="clearSearchField()">
-          <i class="bi bi-x-square"></i> Cancelar
+        <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancel
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info button-search mb-3" title="Adicionar Endereço" (click)="openCreateModal()">
-          <i class="bi bi-plus-square-fill"></i> Adicionar
+        <button type="button" class="btn button-info button-search mb-3" title="Add" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Add
         </button>
       </div>
     </div>
   </div>
 
-  <app-base-table
-    [data]="filteredAddresses.length ? filteredAddresses : addresses"
-    [columns]="columns"
-    (update)="onUpdate($event)"
-    (delete)="onDelete($event)">
-  </app-base-table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Street</th>
+          <th>Number</th>
+          <th>complement</th>
+          <th>Neighborhood</th>
+          <th>State</th>
+          <th>City</th>
+          <th>Zip Code</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let address of filteredAddresses">
+          <td>{{ address.street }}</td>
+          <td>{{ address.number }}</td>
+          <td>{{ address.complement }}</td>
+          <td>{{ address.neighborhood }}</td>
+          <td>{{ address.federativeUnit }}</td>
+          <td>{{ address.city }}</td>
+          <td>{{ address.zipCode }}</td>
+          <td>
+            <button class="btn btn-warning me-1" (click)="onUpdate(address)" title="Update">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-danger" (click)="onDelete(address)" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -30,7 +59,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addressModalLabel">
-          {{ isUpdateMode ? 'Atualizar Endereço' : 'Adicionar Novo Endereço' }}
+          {{ isUpdateMode ? 'Update Zip Code' : 'Add New Zip Code' }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -40,7 +69,7 @@
             <div class="col-md-8">
               <div class="d-flex">
                 <div class="md-2">
-                  <label for="zipCode" class="form-label">Adicionar CEP</label>
+                  <label for="zipCode" class="form-label">Add zip code</label>
                   <div class="input-group d-flex">
                     <input type="text"
                            id="zipCode"
@@ -51,8 +80,8 @@
                            [(ngModel)]="address.zipCode"
                            (ngModelChange)="address.zipCode = formatZipCode($event)">
                     <div class="ms-2 mb-3">
-                      <button type="button" class="btn button-info button-search" (click)="searchZipCode()" title="Pesquisar CEP">
-                        <i class="bi bi-search"></i> Pesquisar CEP
+                      <button type="button" class="btn button-info button-search" (click)="searchZipCode()" title="Search zip code">
+                        <i class="bi bi-search"></i> Search zip code
                       </button>
                     </div>
                   </div>
@@ -61,32 +90,32 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="street" class="form-label">Logradouro</label>
+                <label for="street" class="form-label">Street</label>
                 <input type="text" id="street" name="street" class="form-control" [(ngModel)]="address.street">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="number" class="form-label">Número</label>
+                <label for="number" class="form-label">Number</label>
                 <input type="text" id="number" name="number" class="form-control input-form--sm-1" [(ngModel)]="address.number">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="complement" class="form-label">Complemento</label>
+                <label for="complement" class="form-label">Complement</label>
                 <input type="text" id="complement" name="complement" class="form-control"
                   [(ngModel)]="address.complement">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="neighborhood" class="form-label">Bairro</label>
+                <label for="neighborhood" class="form-label">Neighborhood</label>
                 <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="address.neighborhood">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label for="federativeUnit" class="form-label">Estado</label>
+                <label for="federativeUnit" class="form-label">State</label>
                 <select id="federativeUnit" name="federativeUnit" class="form-control small-select" [(ngModel)]="address.federativeUnit">
                   <option *ngFor="let state of states" [value]="state.acronym">{{ state.acronym }}</option>
                 </select>
@@ -94,13 +123,13 @@
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label for="city" class="form-label">Cidade</label>
+                <label for="city" class="form-label">City</label>
                 <input type="text" id="city" name="city" class="form-control" [(ngModel)]="address.city">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label for="zipCode" class="form-label">CEP</label>
+                <label for="zipCode" class="form-label">Zip Code</label>
                 <input type="text" id="zipCode" name="zipCode" class="form-control input-zip-code" [(ngModel)]="address.zipCode">
               </div>
             </div>
@@ -108,14 +137,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Fechar">
-          <i class="bi bi-door-closed-fill"></i> Fechar
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+          <i class="bi bi-door-closed-fill"></i> Close
         </button>
-        <button type="button" class="btn button-danger" title="Limpar Campos" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Limpar
+        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Clear
         </button>
-        <button type="button" class="btn button-success" title="Salvar" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Salvar
+        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i> Save
         </button>
       </div>
     </div>

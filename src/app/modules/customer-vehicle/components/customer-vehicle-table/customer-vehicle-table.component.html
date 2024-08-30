@@ -2,27 +2,50 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchCustomerVehicle()">
+        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchCustomerVehicle()">
       </div>
       <div class="ms-2">
-        <button class="btn button-danger button-search mb-3" title="Cancelar" (click)="clearSearchField()">
-          <i class="bi bi-x-square"></i> Cancelar
+        <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancel
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info button-search mb-3" title="Adicionar Associação" (click)="openCreateModal()">
-          <i class="bi bi-plus-square-fill"></i> Adicionar
+        <button type="button" class="btn button-info button-search mb-3" title="Add" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Add
         </button>
       </div>
     </div>
   </div>
 
-  <app-base-table
-    [data]="filteredCustomerVehicle.length ? filteredCustomerVehicle : customersVehicles"
-    [columns]="columns"
-    (update)="onUpdate($event)"
-    (delete)="onDelete($event)">
-  </app-base-table>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Customer</th>
+          <th>Vehicle</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customerVehicle of filteredCustomerVehicle.length ? filteredCustomerVehicle : customersVehicles">
+          <td>{{ getCustomerName(customerVehicle.customerId) }}</td>
+          <td>{{ getVehicleModel(customerVehicle.vehicleId) }}</td>
+          <td>
+            <button type="button" class="btn btn-warning btn-sm me-1" (click)="onUpdate(customerVehicle)" title="Update">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" (click)="onDelete(customerVehicle)" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredCustomerVehicle.length === 0 && customersVehicles.length === 0">
+          <td [attr.colspan]="3" class="text-center">No data found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal fade" id="customerVehicleModal" tabindex="-1" aria-labelledby="customerVehicleModalLabel" aria-hidden="true">
@@ -30,7 +53,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="customerVehicleModalLabel">
-          {{ isUpdateMode ? 'Atualizar Associação' : 'Adicionar Nova Associação' }}
+          {{ isUpdateMode ? 'Update Association' : 'Add New Association' }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -39,7 +62,7 @@
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="name" class="form-label">Cliente</label>
+                <label for="customerId" class="form-label">Customer</label>
                 <select id="customerId" name="customerId" class="form-control" [(ngModel)]="customerVehicle.customerId">
                   <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
                 </select>
@@ -47,7 +70,7 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="birthDate" class="form-label">Veículo</label>
+                <label for="vehicleId" class="form-label">Vehicle</label>
                 <select id="vehicleId" name="vehicleId" class="form-control" [(ngModel)]="customerVehicle.vehicleId">
                   <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">{{ vehicle.model }}</option>
                 </select>
@@ -57,14 +80,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Fechar">
-          <i class="bi bi-door-closed-fill"></i> Fechar
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+          <i class="bi bi-door-closed-fill"></i> Close
         </button>
-        <button type="button" class="btn button-danger" title="Limpar Campos" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Limpar
+        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Clear
         </button>
-        <button type="button" class="btn button-success" title="Salvar" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Salvar
+        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i> Save
         </button>
       </div>
     </div>

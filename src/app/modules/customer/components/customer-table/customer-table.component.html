@@ -2,27 +2,70 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
+        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
       </div>
       <div class="ms-2">
-        <button class="btn button-danger button-search mb-3" title="Cancelar" (click)="clearSearchField()">
-          <i class="bi bi-x-square"></i> Cancelar
+        <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancel
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info button-search mb-3" title="Adicionar Cliente" (click)="openCreateModal()">
-          <i class="bi bi-plus-square-fill"></i> Adicionar
+        <button type="button" class="btn button-info button-search mb-3" title="Add" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Add
         </button>
       </div>
     </div>
   </div>
 
-  <app-base-table
-    [data]="filteredCustomers.length ? filteredCustomers : customers"
-    [columns]="columns"
-    (update)="onUpdate($event)"
-    (delete)="onDelete($event)">
-  </app-base-table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Birth Date</th>
+          <th>CPF</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of filteredCustomers">
+          <td>{{ customer.name }}</td>
+          <td>{{ customer.birthDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ customer.cpf }}</td>
+          <td>{{ customer.phone }}</td>
+          <td>{{ customer.email }}</td>
+          <td>
+            {{ customer.address?.street }},
+            {{ customer.address?.number }}
+            {{ customer.address?.complement }},
+            {{ customer.address?.neighborhood }}
+          </td>
+          <td>
+            <button type="button"
+                    class="btn btn-warning btn-sm me-1"
+                    (click)="onUpdate(customer)"
+                    title="Update">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+
+            <button type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="onDelete(customer)"
+                    title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredCustomers.length === 0">
+          <td [attr.colspan]="7" class="text-center">No customers found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
@@ -30,7 +73,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="customerModalLabel">
-          {{ isUpdateMode ? 'Atualizar Cliente' : 'Adicionar Novo Cliente' }}
+          {{ isUpdateMode ? 'Update Customer' : 'Add New Customer' }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -39,13 +82,13 @@
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="name" class="form-label">Nome</label>
+                <label for="name" class="form-label">Name</label>
                 <input type="text" id="name" name="name" class="form-control" [(ngModel)]="customer.name">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="birthDate" class="form-label">Data de Nascimento</label>
+                <label for="birthDate" class="form-label">Birth Date</label>
                 <input type="date" id="birthDate" name="birthDate" class="form-control" [(ngModel)]="customer.birthDate">
               </div>
             </div>
@@ -57,7 +100,7 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="phone" class="form-label">Telefone</label>
+                <label for="phone" class="form-label">Phone</label>
                 <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="customer.phone">
               </div>
             </div>
@@ -69,7 +112,7 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="addressId" class="form-label">Endereço</label>
+                <label for="addressId" class="form-label">Address</label>
                 <select id="addressId" name="addressId" class="form-select" [(ngModel)]="customer.addressId">
                   <option *ngFor="let address of addresses" [value]="address.id">
                     {{ address.street }}, {{ address.number }}
@@ -81,14 +124,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Fechar">
-          <i class="bi bi-door-closed-fill"></i> Fechar
+        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+          <i class="bi bi-door-closed-fill"></i> Close
         </button>
-        <button type="button" class="btn button-danger" title="Limpar Campos" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Limpar
+        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Clear
         </button>
-        <button type="button" class="btn button-success" title="Salvar" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Salvar
+        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
+          <i class="bi bi-floppy-fill"></i> Save
         </button>
       </div>
     </div>

@@ -24,11 +24,6 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
   timeValueModal: number = 200;
   searchTerm: string = '';
 
-  columns = [
-    { key: 'customerId', header: 'Cliente' },
-    { key: 'vehicleId', header: 'Veículo' },
-  ];
-
   private modalIdcustomerVehicle: string = 'customerVehicleModal';
 
   constructor(
@@ -157,5 +152,15 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
       () => new CustomerVehicle(),
       this.timeValueModal
     );
+  }
+
+  getCustomerName(customerId: number): string {
+    const customer = this.customers.find(c => c.id === customerId);
+    return customer ? customer.name : 'Desconhecido';
+  }
+
+  getVehicleModel(vehicleId: number): string {
+    const vehicle = this.vehicles.find(v => v.id === vehicleId);
+    return vehicle ? vehicle.model : 'Desconhecido';
   }
 }

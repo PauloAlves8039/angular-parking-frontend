@@ -17,16 +17,7 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
   searchTerm: string = '';
-
-  columns = [
-    { key: 'vehicleType', header: 'Tipo' },
-    { key: 'brand', header: 'Marca' },
-    { key: 'model', header: 'Modelo' },
-    { key: 'color', header: 'Cor' },
-    { key: 'vehicleYear', header: 'Ano' },
-    { key: 'notes', header: 'Observações' },
-  ];
-
+  
   private modalIdVehicle: string = 'vehicleModal';
 
   constructor(

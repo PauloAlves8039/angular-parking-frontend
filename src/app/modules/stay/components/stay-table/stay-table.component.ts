@@ -4,6 +4,10 @@ import { StayService } from '../../../../core/services/stay/Stay.service';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
+import { CustomerService } from '../../../../core/services/customer/Customer.service';
+import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
+import { Vehicle } from '../../../../core/models/Vehicle';
+import { Customer } from '../../../../core/models/Customer';
 
 @Component({
   selector: 'app-stay-table',
@@ -12,37 +16,55 @@ import { lastValueFrom } from 'rxjs';
 })
 export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   stays: Stay[] = [];
+  customers: Customer[] = [];
+  vehicles: Vehicle[] = [];
   filteredStays: Stay[] = [];
   stay: Stay = new Stay();
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
   searchTerm: string = '';
 
-  columns = [
-    { key: 'customerVehicleId', header: 'Cliente' },
-    { key: 'licensePlate', header: 'Placa' },
-    { key: 'entryDate', header: 'Entrada' },
-    { key: 'exitDate', header: 'Saída' },
-    { key: 'hourlyRate', header: 'Taxa por Hora' },
-    { key: 'totalAmount', header: 'Total' },
-    { key: 'stayStatus', header: 'Estado' },
-  ];
-
   private modalIdStay: string = 'stayModal';
 
   constructor(
     private stayService: StayService,
+    private customerService: CustomerService,
+    private vehicleService: VehicleService,
     private modalService: ModalService
   ) {}
 
   ngOnInit() {
     this.getAll();
+    this.loadCustomers();
+    this.loadVehicles();
+  }
+
+  async loadCustomers() {
+    try {
+      this.customers = await lastValueFrom(this.stayService.getAllCustomers());
+    } catch (error) {
+      console.error(`Error loading customers: ${error}`);
+    }
+  }
+
+  async loadVehicles() {
+    try {
+      this.vehicles = await lastValueFrom(this.stayService.getAllVehicles());
+    } catch (error) {
+      console.error(`Error loading vehicles: ${error}`);
+    }
   }
 
   async getAll() {
     try {
       const stays = await lastValueFrom(this.stayService.getAll());
-      this.stays = stays;
+      this.stays = await Promise.all(stays.map(async stay => {
+        if (stay.customerVehicleId) {
+          stay.customer = await this.customerService.getById(stay.customerVehicleId).toPromise();
+          stay.vehicle = await this.vehicleService.getById(stay.customerVehicleId).toPromise();
+        }
+        return stay;
+      }));
       this.filteredStays = [...this.stays];
     } catch (error) {
       console.error(`Error loading all stays: ${error}`);
@@ -106,6 +128,12 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   clearSearchField() {
     this.searchTerm = '';
     this.getAll();
+  }
+
+  clearModalFields(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.stay = new Stay();
   }
 
   onUpdate(stay: Stay) {
