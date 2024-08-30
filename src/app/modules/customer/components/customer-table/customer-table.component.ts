@@ -4,6 +4,8 @@ import { Customer } from '../../../../core/models/Customer';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
+import { AddressService } from '../../../../core/services/address/Address.service';
+import { Address } from '../../../../core/models/Address';
 
 @Component({
   selector: 'app-customer-table',
@@ -12,30 +14,33 @@ import { lastValueFrom } from 'rxjs';
 })
 export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   customers: Customer[] = [];
+  addresses: Address[] = [];
   filteredCustomers: Customer[] = [];
   customer: Customer = new Customer();
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
   searchTerm: string = '';
 
-  columns = [
-    { key: 'name', header: 'Nome' },
-    { key: 'birthDate', header: 'Data de Nascimento' },
-    { key: 'cpf', header: 'CPF' },
-    { key: 'phone', header: 'Telefone' },
-    { key: 'email', header: 'Email' },
-    { key: 'addressId', header: 'Endereço' },
-  ];
+  // columns = [
+  //   { key: 'name', header: 'Nome' },
+  //   { key: 'birthDate', header: 'Data de Nascimento' },
+  //   { key: 'cpf', header: 'CPF' },
+  //   { key: 'phone', header: 'Telefone' },
+  //   { key: 'email', header: 'Email' },
+  //   { key: 'addressId', header: 'Endereço' },
+  // ];
 
   private modalIdCustomer: string = 'customerModal';
 
   constructor(
     private customerService: CustomerService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private addressService: AddressService
   ) {}
 
   ngOnInit() {
     this.getAll();
+    this.getAllAddresses();
   }
 
   saveOrUpdate() {
@@ -45,15 +50,23 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
       this.save();
     }
   }
-  
+
   async getAll() {
     try {
       const customers = await lastValueFrom(this.customerService.getAll());
-      this.customers = customers;
-      this.filteredCustomers = [...this.customers];
+      this.addresses = await lastValueFrom(this.addressService.getAll());
+      this.filteredCustomers = customers.map(customer => {
+        const address = this.getAddressById(customer.addressId);
+        return { ...customer, address };
+      });
     } catch (error) {
       console.error(`Error loading all customers: ${error}`);
     }
+  }
+
+  getAddressById(addressId: number): Address | undefined {
+    const address = this.addresses.find(address => address.id === addressId);
+    return address;
   }
 
   async save() {
@@ -85,6 +98,14 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
     }
   }
 
+  async getAllAddresses() {
+    try {
+      this.addresses = await lastValueFrom(this.addressService.getAll());
+    } catch (error) {
+      console.error(`Error loading all addresses: ${error}`);
+    }
+  }
+
   searchCustomers() {
     if (this.searchTerm.trim() !== '') {
       this.filteredCustomers = this.customers.filter(
@@ -104,6 +125,12 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   clearSearchField() {
     this.searchTerm = '';
     this.getAll();
+  }
+
+  clearModalFields(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.customer = new Customer();
   }
 
   onUpdate(customer: Customer) {

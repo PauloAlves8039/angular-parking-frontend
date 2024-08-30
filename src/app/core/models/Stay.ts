@@ -1,4 +1,6 @@
+import { Customer } from './Customer';
 import { Entity } from './Entity';
+import { Vehicle } from './Vehicle';
 
 export class Stay extends Entity {
   customerVehicleId?: number;
@@ -8,6 +10,8 @@ export class Stay extends Entity {
   hourlyRate: number;
   totalAmount?: number;
   stayStatus: string;
+  customer?: Customer;
+  vehicle?: Vehicle;
 
   constructor() {
     super();
@@ -18,5 +22,7 @@ export class Stay extends Entity {
     this.hourlyRate = 0;
     this.totalAmount = 0;
     this.stayStatus = '';
+    this.customer = new Customer();
+    this.vehicle = new Vehicle();
   }
 }

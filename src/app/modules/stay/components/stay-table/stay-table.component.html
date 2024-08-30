@@ -2,38 +2,67 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Pesquisar..." [(ngModel)]="searchTerm" (input)="searchStays()">
+        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchStays()">
       </div>
       <div class="ms-2">
-        <button class="btn button-cancel mb-3 button-search" title="Cancelar" (click)="clearSearchField()">
-          <i class="bi bi-x-square"></i> Cancelar
+        <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
+          <i class="bi bi-x-square"></i> Cancel
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info mb-3 button-search" title="Adicionar Permanência" (click)="openCreateModal()">
-          <i class="bi bi-plus-square-fill"></i> Adicionar
+        <button type="button" class="btn button-info mb-3 button-search" title="Add" (click)="openCreateModal()">
+          <i class="bi bi-plus-square-fill"></i> Add
         </button>
       </div>
     </div>
   </div>
 
-  <app-base-table
-    [data]="filteredStays.length ? filteredStays : stays"
-    [columns]="columns"
-    [showPdfButton]="true"
-    (update)="onUpdate($event)"
-    (delete)="onDelete($event)"
-    (generatePdf)="onGeneratePdf($event)">
-  </app-base-table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Customer - Vehicle</th>
+          <th>License Plate</th>
+          <th>Entry</th>
+          <th>Exit</th>
+          <th>Hourly Rate</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stay of filteredStays">
+          <td>{{ stay.customer?.name }} - {{ stay.vehicle?.model }}</td>
+          <td>{{ stay.licensePlate }}</td>
+          <td>{{ stay.entryDate | date:'dd/MM/yyyy' }}</td>
+          <td>{{ stay.exitDate ? (stay.exitDate | date:'dd/MM/yyyy') : 'N/A' }}</td>
+          <td>{{ stay.hourlyRate | currency }}</td>
+          <td>{{ stay.totalAmount ? (stay.totalAmount | currency) : 'N/A' }}</td>
+          <td>{{ stay.stayStatus }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm me-1" (click)="onUpdate(stay)" title="Update">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-primary btn-sm me-1" (click)="onGeneratePdf(stay)" title="Generate Ticket">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="onDelete(stay)" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<!-- Modal para criação de nova permanência -->
 <div class="modal fade" id="stayModal" tabindex="-1" aria-labelledby="stayModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="stayModalLabel">
-          Adicionar Nova Permanência
+          Add New Stay
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -42,26 +71,34 @@
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="customerVehicleId" class="form-label">Cliente</label>
-                <input type="text" id="customerVehicleId" name="customerVehicleId" class="form-control" [(ngModel)]="stay.customerVehicleId">
+                <label for="customerVehicleId" class="form-label">Customer</label>
+                <select id="customerVehicleId" name="customerVehicleId" class="form-control" [(ngModel)]="stay.customerVehicleId">
+                  <option *ngFor="let customer of customers" [value]="customer.id">
+                    {{ customer.name }}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="licensePlate" class="form-label">Placa</label>
+                <label for="licensePlate" class="form-label">License Plate</label>
                 <input type="text" id="licensePlate" name="licensePlate" class="form-control" [(ngModel)]="stay.licensePlate">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="entryDate" class="form-label">Entrada</label>
-                <input type="date" id="entryDate" name="entryDate" class="form-control" [(ngModel)]="stay.entryDate">
+                <label for="entryDate" class="form-label">Entry Date</label>
+                <input type="datetime-local" id="entryDate" name="entryDate" class="form-control" [(ngModel)]="stay.entryDate">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="hourlyRate" class="form-label">Taxa por Hora</label>
-                <input type="number" id="hourlyRate" name="hourlyRate" class="form-control" [(ngModel)]="stay.hourlyRate">
+                <label for="hourlyRate" class="form-label">Hourly Rate</label>
+                <select id="hourlyRate" name="hourlyRate" class="form-control" [(ngModel)]="stay.hourlyRate">
+                  <option value="3.00">R$ 3,00</option>
+                  <option value="4.00">R$ 4,00</option>
+                  <option value="5.00">R$ 5,00</option>
+                </select>
               </div>
             </div>
           </div>
@@ -69,10 +106,13 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-x-square-fill"></i>
+          <i class="bi bi-door-closed-fill"></i> Close
+        </button>
+        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+          <i class="bi bi-x-square"></i> Clear
         </button>
         <button type="button" class="btn button-success" title="Save" (click)="save()">
-          <i class="bi bi-floppy-fill"></i>
+          <i class="bi bi-floppy-fill"></i> Save
         </button>
       </div>
     </div>
