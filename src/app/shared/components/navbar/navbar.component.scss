@@ -1,7 +1,92 @@
 .logo {
-  height: 45px;
-  width: auto;
-  object-fit: cover;
+  height: 80%;
+  width: 80%;
+  max-width: 120px;
+  object-fit: contain;
   border-radius: 4px;
-  border: 2px solid var(--neutral-color-light);
+  border: 2px solid var(--primary-color);
+}
+
+#wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+#sidebar {
+  min-width: 150px;
+  max-width: 150px;
+  height: 100vh;
+  transition: all 0.3s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 0;
+}
+
+#sidebar.active {
+  margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+  height: 120px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+#sidebar ul.components {
+  padding: 5px 0;
+}
+
+#sidebar ul p {
+  color: var(--neutral-color-light);
+  padding: 5px;
+}
+
+#sidebar ul li a {
+  padding: 10px;
+  font-size: 1em;
+  display: block;
+  color: var(--neutral-color-light);
+  transition: 0.3s;
+}
+
+#sidebar ul li a:hover {
+  background: var(--primary-color);
+  color: var(--dark-color);
+}
+
+a {
+  text-decoration: none;
+}
+
+#sidebar ul li.active > a,
+a[aria-expanded="true"] {
+  background: var(--primary-color);
+  color: var(--neutral-color-light);
+}
+
+#content {
+  padding: 20px;
+  min-height: 100vh;
+  margin-left: 150px;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+#content.active {
+  margin-left: 0;
+}
+
+#sidebarCollapse {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }

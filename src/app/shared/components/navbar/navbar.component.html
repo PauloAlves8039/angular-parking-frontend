@@ -1,34 +1,53 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/home">
-      <img src="assets/images/logo.png" alt="Logo" class="logo">
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+<div class="wrapper">
+  <nav id="sidebar" class="bg-dark">
+    <div class="sidebar-header">
+      <a routerLink="/home">
+        <img src="assets/images/logo.png" alt="Logo" class="logo">
+      </a>
+    </div>
+
+    <ul class="list-unstyled components">
+      <li>
+        <a href="/home" routerLink="/home" routerLinkActive="active">
+          <i class="fs-6 bi bi-house-door"></i> Home
+        </a>
+      </li>
+      <li>
+        <a href="/customer" routerLink="/customer" routerLinkActive="active">
+          <i class="fs-6 bi bi-people"></i> Customers
+        </a>
+      </li>
+      <li>
+        <a href="/address" routerLink="/address" routerLinkActive="active">
+          <i class="fs-6 bi bi-geo-alt"></i> Addresses
+        </a>
+      </li>
+      <li>
+        <a href="/vehicle" routerLink="/vehicle" routerLinkActive="active">
+          <i class="fs-6 bi bi-car-front"></i> Vehicles
+        </a>
+      </li>
+      <li>
+        <a href="/customer-vehicle" routerLink="/customer-vehicle" routerLinkActive="active">
+          <i class="fs-6 bi bi-link-45deg"></i> Associations
+        </a>
+      </li>
+      <li>
+        <a href="/stay" routerLink="/stay" routerLinkActive="active">
+          <i class="fs-6 bi bi-clock-history"></i> Stays
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div id="content">
+    <button type="button" id="sidebarCollapse" class="btn btn-dark me-2">
+      <i class="bi bi-list"></i>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/customer" routerLinkActive="active">Customers</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/address" routerLinkActive="active">Addresses</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/vehicle" routerLinkActive="active">Vehicles</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/customer-vehicle" routerLinkActive="active">Associations</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/stay" routerLinkActive="active">Stays</a>
-        </li>
-      </ul>
+    <div class="container">
+      <router-outlet></router-outlet>
     </div>
+
+    <app-footer></app-footer>
   </div>
-</nav>
+</div>

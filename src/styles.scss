@@ -23,10 +23,11 @@
   --small-spacing: 4px;
   --medium-spacing: 8px;
   --large-spacing: 16px;
-  --extra-large-spacing: 60px;
+  --extra-large-spacing: 40px;
 }
 
 .main {
+  margin-top: -18px;
   margin-bottom: var(--extra-large-spacing);
 }
 
