@@ -21,15 +21,6 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   timeValueModal: number = 200;
   searchTerm: string = '';
 
-  // columns = [
-  //   { key: 'name', header: 'Nome' },
-  //   { key: 'birthDate', header: 'Data de Nascimento' },
-  //   { key: 'cpf', header: 'CPF' },
-  //   { key: 'phone', header: 'Telefone' },
-  //   { key: 'email', header: 'Email' },
-  //   { key: 'addressId', header: 'Endereço' },
-  // ];
-
   private modalIdCustomer: string = 'customerModal';
 
   constructor(
@@ -55,10 +46,11 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
     try {
       const customers = await lastValueFrom(this.customerService.getAll());
       this.addresses = await lastValueFrom(this.addressService.getAll());
-      this.filteredCustomers = customers.map(customer => {
+      this.customers = customers.map(customer => {
         const address = this.getAddressById(customer.addressId);
         return { ...customer, address };
       });
+      this.filteredCustomers = [...this.customers]; // Clone the customers array to the filteredCustomers array
     } catch (error) {
       console.error(`Error loading all customers: ${error}`);
     }
@@ -111,11 +103,10 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
       this.filteredCustomers = this.customers.filter(
         (customer: Customer) =>
           customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          customer.email
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase()) ||
-          customer.phone.includes(this.searchTerm) ||
-          customer.cpf.includes(this.searchTerm)
+          customer.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          customer.cpf.includes(this.searchTerm) ||
+          (customer.address?.street.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+           customer.address?.city.toLowerCase().includes(this.searchTerm.toLowerCase()))
       );
     } else {
       this.filteredCustomers = [...this.customers];
