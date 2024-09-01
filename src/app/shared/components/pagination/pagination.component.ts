@@ -17,4 +17,16 @@ export class PaginationComponent implements OnInit {
   pages() {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
+
+  goToFirstPage() {
+    if (this.currentPage > 1) {
+      this.changePage.emit(1);
+    }
+  }
+
+  goToLastPage() {
+    if (this.currentPage < this.totalPages) {
+      this.changePage.emit(this.totalPages);
+    }
+  }
 }
