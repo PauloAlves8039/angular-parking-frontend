@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
+        <input type="text" class="form-control" placeholder="Search Customers" [(ngModel)]="searchTerm" (input)="searchCustomers()">
       </div>
       <div class="ms-2">
         <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let customer of filteredCustomers">
+        <tr *ngFor="let customer of pagedCustomers">
           <td>{{ customer.name }}</td>
           <td>{{ customer.birthDate | date: 'dd/MM/yyyy' }}</td>
           <td>{{ customer.cpf }}</td>
@@ -65,6 +65,12 @@
       </tbody>
     </table>
   </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (changePage)="onPageChange($event)">
+  </app-pagination>
 
 </div>
 
