@@ -1,6 +1,13 @@
+.home-container {
+  margin-bottom: var(--extra-large-spacing);
+}
+
 .container-card {
   filter: grayscale(100%);
   transition: filter 0.5s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .container-card:hover {
@@ -21,4 +28,18 @@
 
 .card-hover:hover {
   transform: scale(1.02);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.card-body {
+  flex-grow: 1;
+}
+
+.card {
+  min-width: 350px;
 }

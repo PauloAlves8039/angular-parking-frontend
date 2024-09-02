@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchStays()">
+        <input type="text" class="form-control" placeholder="Search Stays" [(ngModel)]="searchTerm" (input)="searchStays()">
       </div>
       <div class="ms-2">
         <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
@@ -32,13 +32,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let stay of filteredStays">
+        <tr *ngFor="let stay of pagedStays">
           <td>{{ stay.customer?.name }} - {{ stay.vehicle?.model }}</td>
           <td>{{ stay.licensePlate }}</td>
-          <td>{{ stay.entryDate | date:'dd/MM/yyyy' }}</td>
-          <td>{{ stay.exitDate ? (stay.exitDate | date:'dd/MM/yyyy') : 'N/A' }}</td>
-          <td>{{ stay.hourlyRate | currency }}</td>
-          <td>{{ stay.totalAmount ? (stay.totalAmount | currency) : 'N/A' }}</td>
+          <td>{{ stay.entryDate | datehour }}</td>
+          <td>{{ stay.exitDate ? (stay.exitDate | datehour) : 'N/A' }}</td>
+          <td>{{ stay.hourlyRate | real }}</td>
+          <td>{{ stay.totalAmount ? (stay.totalAmount | real) : 'N/A' }}</td>
           <td>{{ stay.stayStatus }}</td>
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="onUpdate(stay)" title="Update">
@@ -55,6 +55,13 @@
       </tbody>
     </table>
   </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (changePage)="onPageChange($event)">
+  </app-pagination>
+
 </div>
 
 <div class="modal fade" id="stayModal" tabindex="-1" aria-labelledby="stayModalLabel" aria-hidden="true">

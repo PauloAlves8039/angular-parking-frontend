@@ -6,13 +6,25 @@ import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { BaseTableComponent } from './components/base-table/base-table.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { RealPipe } from './pipes/currencies/real/real.pipe';
+import { CpfmaskPipe } from './pipes/input-format/cpf/cpfmask.pipe';
+import { DatehourPipe } from './pipes/basic-date-format/date-hour/datehour.pipe';
+import { DateformatPipe } from './pipes/basic-date-format/date/dateformat.pipe';
+import { ZipcodeformatPipe } from './pipes/input-format/zipcode/zipcodeformat.pipe';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     FooterComponent,
     LoadingComponent,
-    BaseTableComponent
+    BaseTableComponent,
+    PaginationComponent,
+    RealPipe,
+    DateformatPipe,
+    DatehourPipe,
+    CpfmaskPipe,
+    ZipcodeformatPipe,
   ],
   imports: [
     CommonModule,
@@ -23,7 +35,14 @@ import { BaseTableComponent } from './components/base-table/base-table.component
     NavbarComponent,
     FooterComponent,
     LoadingComponent,
-    BaseTableComponent
+    BaseTableComponent,
+    PaginationComponent,
+    RealPipe,
+    DateformatPipe,
+    DatehourPipe,
+    CpfmaskPipe,
+    ZipcodeformatPipe,
+
   ]
 })
 export class SharedModule { }

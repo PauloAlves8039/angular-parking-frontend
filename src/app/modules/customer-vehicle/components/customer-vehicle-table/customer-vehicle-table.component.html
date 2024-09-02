@@ -2,7 +2,11 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchCustomerVehicle()">
+        <input type="text"
+               class="form-control"
+               placeholder="Search Associations"
+               [(ngModel)]="searchTerm"
+               (input)="searchCustomerVehicle()">
       </div>
       <div class="ms-2">
         <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
@@ -28,7 +32,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let customerVehicle of filteredCustomerVehicle.length ? filteredCustomerVehicle : customersVehicles">
+        <tr *ngFor="let customerVehicle of pagedCustomersVehicles">
           <td>{{ getCustomerName(customerVehicle.customerId) }}</td>
           <td>{{ getVehicleModel(customerVehicle.vehicleId) }}</td>
           <td>
@@ -40,12 +44,20 @@
             </button>
           </td>
         </tr>
-        <tr *ngIf="filteredCustomerVehicle.length === 0 && customersVehicles.length === 0">
+        <tr *ngIf="pagedCustomersVehicles.length === 0 && filteredCustomerVehicle.length > 0">
           <td [attr.colspan]="3" class="text-center">No data found.</td>
         </tr>
       </tbody>
+
     </table>
   </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (changePage)="onPageChange($event)">
+  </app-pagination>
+
 </div>
 
 <div class="modal fade" id="customerVehicleModal" tabindex="-1" aria-labelledby="customerVehicleModalLabel" aria-hidden="true">

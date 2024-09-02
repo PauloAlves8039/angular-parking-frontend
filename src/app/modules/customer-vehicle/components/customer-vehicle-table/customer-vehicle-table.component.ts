@@ -19,10 +19,14 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
   customers: Customer[] = [];
   vehicles: Vehicle[] = [];
   filteredCustomerVehicle: CustomerVehicle[] = [];
+  pagedCustomersVehicles: CustomerVehicle[] = [];
   customerVehicle: CustomerVehicle = new CustomerVehicle();
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
   searchTerm: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 1;
 
   private modalIdcustomerVehicle: string = 'customerVehicleModal';
 
@@ -51,6 +55,7 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
       const customersVehicles = await lastValueFrom(this.customerVehicleService.getAll());
       this.customersVehicles = customersVehicles;
       this.filteredCustomerVehicle = [...this.customersVehicles];
+      this.updatePagination();
     } catch (error) {
       console.error(`Error loading all customers and associated vehicles: ${error}`);
     }
@@ -95,17 +100,20 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
   }
 
   searchCustomerVehicle() {
-    const searchTermNumber = Number(this.searchTerm.trim());
+    const searchTermLower = this.searchTerm.trim().toLowerCase();
 
-    if (!isNaN(searchTermNumber)) {
-      this.filteredCustomerVehicle = this.customersVehicles.filter(
-        (customerVehicle: CustomerVehicle) =>
-          customerVehicle.customerId === searchTermNumber ||
-          customerVehicle.vehicleId === searchTermNumber
-      );
+    if (searchTermLower) {
+      this.filteredCustomerVehicle = this.customersVehicles.filter((customerVehicle: CustomerVehicle) => {
+        const customerName = this.getCustomerName(customerVehicle.customerId).toLowerCase();
+        const vehicleModel = this.getVehicleModel(customerVehicle.vehicleId).toLowerCase();
+
+        return customerName.includes(searchTermLower) || vehicleModel.includes(searchTermLower);
+      });
     } else {
       this.filteredCustomerVehicle = [...this.customersVehicles];
     }
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   clearSearchField() {
@@ -163,4 +171,22 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     const vehicle = this.vehicles.find(v => v.id === vehicleId);
     return vehicle ? vehicle.model : 'Desconhecido';
   }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredCustomerVehicle.length / this.itemsPerPage);
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+    this.pagedCustomersVehicles = this.filteredCustomerVehicle.slice(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.currentPage * this.itemsPerPage
+    );
+  }
+
+  onPageChange(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
 }

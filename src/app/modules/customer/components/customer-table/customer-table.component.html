@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
+        <input type="text" class="form-control" placeholder="Search Customers" [(ngModel)]="searchTerm" (input)="searchCustomers()">
       </div>
       <div class="ms-2">
         <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
@@ -31,10 +31,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let customer of filteredCustomers">
+        <tr *ngFor="let customer of pagedCustomers">
           <td>{{ customer.name }}</td>
-          <td>{{ customer.birthDate | date: 'dd/MM/yyyy' }}</td>
-          <td>{{ customer.cpf }}</td>
+          <td>{{ customer.birthDate | dateformat }}</td>
+          <td>{{ customer.cpf | cpfmask}}</td>
           <td>{{ customer.phone }}</td>
           <td>{{ customer.email }}</td>
           <td>
@@ -66,6 +66,12 @@
     </table>
   </div>
 
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (changePage)="onPageChange($event)">
+  </app-pagination>
+
 </div>
 
 <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
@@ -95,7 +101,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="cpf" class="form-label">CPF</label>
-                <input type="text" id="cpf" name="cpf" class="form-control" [(ngModel)]="customer.cpf">
+                <input type="text" id="cpf" name="cpf" class="form-control" [(ngModel)]="customer.cpf" [value]="customer.cpf | cpfmask">
               </div>
             </div>
             <div class="col-md-6">

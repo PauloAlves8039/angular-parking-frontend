@@ -1,0 +1,18 @@
+.pagination {
+  justify-content: center;
+}
+
+.page-item.active .page-link {
+  background-color: var(--info-color);
+  color: var(--neutral-color-light);
+  border-color: var(--info-color);
+}
+
+.page-item.disabled .page-link {
+  pointer-events: none;
+  color: var(--neutral-color-medium);
+}
+
+span {
+  color: var(--info-color);
+}
