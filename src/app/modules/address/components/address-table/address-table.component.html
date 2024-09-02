@@ -85,7 +85,8 @@
                            maxlength="9"
                            pattern="[0-9]{8}"
                            [(ngModel)]="address.zipCode"
-                           (ngModelChange)="address.zipCode = zipCodeFormat($event)">
+                           (ngModelChange)="address.zipCode"
+                           [value]="address.zipCode | zipcodeformat">
                     <div class="ms-2 mb-3">
                       <button type="button" class="btn button-info button-search" (click)="searchZipCode()" title="Search zip code">
                         <i class="bi bi-search"></i> Search zip code

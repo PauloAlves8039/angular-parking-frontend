@@ -35,10 +35,10 @@
         <tr *ngFor="let stay of pagedStays">
           <td>{{ stay.customer?.name }} - {{ stay.vehicle?.model }}</td>
           <td>{{ stay.licensePlate }}</td>
-          <td>{{ stay.entryDate | date:'dd/MM/yyyy' }}</td>
-          <td>{{ stay.exitDate ? (stay.exitDate | date:'dd/MM/yyyy') : 'N/A' }}</td>
-          <td>{{ stay.hourlyRate | currency }}</td>
-          <td>{{ stay.totalAmount ? (stay.totalAmount | currency) : 'N/A' }}</td>
+          <td>{{ stay.entryDate | datehour }}</td>
+          <td>{{ stay.exitDate ? (stay.exitDate | datehour) : 'N/A' }}</td>
+          <td>{{ stay.hourlyRate | real }}</td>
+          <td>{{ stay.totalAmount ? (stay.totalAmount | real) : 'N/A' }}</td>
           <td>{{ stay.stayStatus }}</td>
           <td>
             <button class="btn btn-warning btn-sm me-1" (click)="onUpdate(stay)" title="Update">

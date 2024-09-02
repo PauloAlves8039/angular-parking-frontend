@@ -5,7 +5,6 @@ import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
 import { CheckZipCodeService } from '../../../../shared/services/check-zip-code/CheckZipCode.service';
-import { ZipCodeFormat } from '../../helpers/zip-code/zip-code-format';
 
 @Component({
   selector: 'app-address-table',
@@ -35,7 +34,6 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
   ];
 
   private modalIdAddress: string = 'addressModal';
-  private zipCodeHelper: ZipCodeFormat = new ZipCodeFormat();
 
   constructor(
     private addressService: AddressService,
@@ -102,14 +100,10 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
       this.address.neighborhood = result.bairro;
       this.address.city = result.localidade;
       this.address.federativeUnit = result.uf;
-      this.address.zipCode = this.zipCodeFormat(this.address.zipCode);
+      this.address.zipCode = result.cep;
     } catch (error) {
       alert(`Error searching for ZIP code. Check that the zip code is correct and try again: ${error}`);
     }
-  }
-
-  zipCodeFormat(zipCode: string): string {
-    return this.zipCodeHelper.zipCodeFormatHelper(zipCode);
   }
 
   searchAddresses() {
