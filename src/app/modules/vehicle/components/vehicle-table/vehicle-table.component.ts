@@ -13,11 +13,15 @@ import { lastValueFrom } from 'rxjs';
 export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
   vehicles: Vehicle[] = [];
   filteredVehicles: any[] = [];
+  pagedVehicles: Vehicle[] = [];
   vehicle: Vehicle = new Vehicle();
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
   searchTerm: string = '';
-  
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 1;
+
   private modalIdVehicle: string = 'vehicleModal';
 
   constructor(
@@ -42,6 +46,7 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
       const vehicles = await lastValueFrom(this.vehicleService.getAll());
       this.vehicles = vehicles;
       this.filteredVehicles = [...this.vehicles];
+      this.updatePagination();
     } catch (error) {
       console.error(`Error loading all vehicles: ${error}`);
     }
@@ -86,6 +91,7 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
     } else {
       this.filteredVehicles = [...this.vehicles];
     }
+    this.updatePagination();
   }
 
   clearSearchField() {
@@ -134,5 +140,19 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
       () => new Vehicle(),
       this.timeValueModal
     );
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredVehicles.length / this.itemsPerPage);
+    this.pagedVehicles = this.filteredVehicles.slice(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.currentPage * this.itemsPerPage
+    );
+  }
+
+  onPageChange(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagination();
   }
 }

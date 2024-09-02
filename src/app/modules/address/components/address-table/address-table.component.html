@@ -2,7 +2,7 @@
   <div class="col">
     <div class="d-flex">
       <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchAddresses()">
+        <input type="text" class="form-control" placeholder="Search Addresses" [(ngModel)]="searchTerm" (input)="searchAddresses()">
       </div>
       <div class="ms-2">
         <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
@@ -32,7 +32,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let address of filteredAddresses">
+        <tr *ngFor="let address of pagedAddresses">
           <td>{{ address.street }}</td>
           <td>{{ address.number }}</td>
           <td>{{ address.complement }}</td>
@@ -52,6 +52,13 @@
       </tbody>
     </table>
   </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (changePage)="onPageChange($event)">
+  </app-pagination>
+
 </div>
 
 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
@@ -75,7 +82,7 @@
                            id="zipCode"
                            name="zipCode"
                            class="form-control input-zip-code"
-                           maxlength="8"
+                           maxlength="9"
                            pattern="[0-9]{8}"
                            [(ngModel)]="address.zipCode"
                            (ngModelChange)="address.zipCode = formatZipCode($event)">

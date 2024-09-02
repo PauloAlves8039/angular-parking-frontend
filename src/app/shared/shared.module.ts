@@ -6,13 +6,15 @@ import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { BaseTableComponent } from './components/base-table/base-table.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     FooterComponent,
     LoadingComponent,
-    BaseTableComponent
+    BaseTableComponent,
+    PaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import { BaseTableComponent } from './components/base-table/base-table.component
     NavbarComponent,
     FooterComponent,
     LoadingComponent,
-    BaseTableComponent
+    BaseTableComponent,
+    PaginationComponent,
   ]
 })
 export class SharedModule { }

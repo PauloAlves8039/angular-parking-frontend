@@ -7,13 +7,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { CUSTOMER_ROUTES } from './customer.routing';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @NgModule({
   declarations: [
     CustomerTableComponent,
-    CustomerHomeComponent,
-    PaginationComponent
+    CustomerHomeComponent
   ],
   imports: [
     CommonModule,

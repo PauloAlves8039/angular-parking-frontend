@@ -19,10 +19,14 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   customers: Customer[] = [];
   vehicles: Vehicle[] = [];
   filteredStays: Stay[] = [];
+  pagedStays: Stay[] = [];
   stay: Stay = new Stay();
   isUpdateMode: boolean = false;
   timeValueModal: number = 200;
   searchTerm: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 1;
 
   private modalIdStay: string = 'stayModal';
 
@@ -66,6 +70,7 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
         return stay;
       }));
       this.filteredStays = [...this.stays];
+      this.updatePagination();
     } catch (error) {
       console.error(`Error loading all stays: ${error}`);
     }
@@ -123,6 +128,7 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     } else {
       this.filteredStays = [...this.stays];
     }
+    this.updatePagination();
   }
 
   clearSearchField() {
@@ -169,5 +175,19 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
       () => new Stay(),
       this.timeValueModal
     );
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredStays.length / this.itemsPerPage);
+    this.pagedStays = this.filteredStays.slice(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.currentPage * this.itemsPerPage
+    );
+  }
+
+  onPageChange(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagination();
   }
 }

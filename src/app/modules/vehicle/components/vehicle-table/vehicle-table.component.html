@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vehicle of filteredVehicles">
+        <tr *ngFor="let vehicle of pagedVehicles">
           <td>{{ vehicle.vehicleType }}</td>
           <td>{{ vehicle.brand }}</td>
           <td>{{ vehicle.model }}</td>
@@ -60,6 +60,13 @@
       </tbody>
     </table>
   </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (changePage)="onPageChange($event)">
+  </app-pagination>
+
 </div>
 
 <div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="vehicleModalLabel" aria-hidden="true">
