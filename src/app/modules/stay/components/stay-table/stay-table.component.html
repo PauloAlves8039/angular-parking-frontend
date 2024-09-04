@@ -1,7 +1,7 @@
 <div class="mt-2">
   <div class="col">
     <div class="d-flex">
-      <div class="ms-2">
+      <div class="ms-6">
         <input type="text" class="form-control" placeholder="Search Stays" [(ngModel)]="searchTerm" (input)="searchStays()">
       </div>
       <div class="ms-2">
@@ -45,11 +45,7 @@
           }">
             {{ stay.stayStatus }}
           </td>
-
           <td>
-            <!-- <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish">
-              <i class="bi bi-pencil-square"></i> Finish
-            </button> -->
             <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish"
               [disabled]="stay.stayStatus === 'Retirado'" [ngClass]="{'btn-disabled': stay.stayStatus === 'Retirado'}">
               <i class="bi bi-pencil-square"></i> Finish
