@@ -39,9 +39,19 @@
           <td>{{ stay.exitDate ? (stay.exitDate | datehour) : 'N/A' }}</td>
           <td>{{ stay.hourlyRate | real }}</td>
           <td>{{ stay.totalAmount ? (stay.totalAmount | real) : 'N/A' }}</td>
-          <td>{{ stay.stayStatus }}</td>
+          <td [ngClass]="{
+            'stay-status-parked': stay.stayStatus === 'Estacionado',
+            'stay-status-removed': stay.stayStatus === 'Retirado'
+          }">
+            {{ stay.stayStatus }}
+          </td>
+
           <td>
-            <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish">
+            <!-- <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish">
+              <i class="bi bi-pencil-square"></i> Finish
+            </button> -->
+            <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish"
+              [disabled]="stay.stayStatus === 'Retirado'" [ngClass]="{'btn-disabled': stay.stayStatus === 'Retirado'}">
               <i class="bi bi-pencil-square"></i> Finish
             </button>
             <button class="btn button-info btn-sm me-1" (click)="onGeneratePdf(stay)" title="Generate Ticket">

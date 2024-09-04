@@ -12,6 +12,7 @@ import { CpfmaskPipe } from './pipes/input-format/cpf/cpfmask.pipe';
 import { DatehourPipe } from './pipes/basic-date-format/date-hour/datehour.pipe';
 import { DateformatPipe } from './pipes/basic-date-format/date/dateformat.pipe';
 import { ZipcodeformatPipe } from './pipes/input-format/zipcode/zipcodeformat.pipe';
+import { PhoneformatPipe } from './pipes/input-format/phone/phoneformat.pipe';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ZipcodeformatPipe } from './pipes/input-format/zipcode/zipcodeformat.pi
     DateformatPipe,
     DatehourPipe,
     CpfmaskPipe,
+    PhoneformatPipe,
     ZipcodeformatPipe,
   ],
   imports: [
@@ -42,6 +44,7 @@ import { ZipcodeformatPipe } from './pipes/input-format/zipcode/zipcodeformat.pi
     DatehourPipe,
     CpfmaskPipe,
     ZipcodeformatPipe,
+    PhoneformatPipe,
 
   ]
 })
