@@ -70,37 +70,39 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form #customerVehicleForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="customerId" class="form-label">Customer</label>
+                <label for="customerId" class="form-label">Customer <span>*</span></label>
                 <select id="customerId" name="customerId" class="form-control" [(ngModel)]="customerVehicle.customerId">
+                  <option value="" disabled selected>Select Customer</option>
                   <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="vehicleId" class="form-label">Vehicle</label>
+                <label for="vehicleId" class="form-label">Vehicle <span>*</span></label>
                 <select id="vehicleId" name="vehicleId" class="form-control" [(ngModel)]="customerVehicle.vehicleId">
+                  <option value="" disabled selected>Select Vehicle</option>
                   <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">{{ vehicle.model }}</option>
                 </select>
               </div>
             </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+              <i class="bi bi-door-closed-fill"></i> Close
+            </button>
+            <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+              <i class="bi bi-x-square"></i> Clear
+            </button>
+            <button type="button" class="btn button-success" title="Save" [disabled]="!validateFields()" (click)="saveOrUpdate()">
+              <i class="bi bi-floppy-fill"></i> Save
+            </button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-door-closed-fill"></i> Close
-        </button>
-        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Clear
-        </button>
-        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Save
-        </button>
       </div>
     </div>
   </div>

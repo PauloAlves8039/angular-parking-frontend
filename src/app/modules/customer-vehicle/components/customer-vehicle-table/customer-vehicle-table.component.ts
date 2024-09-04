@@ -8,6 +8,7 @@ import { Customer } from '../../../../core/models/Customer';
 import { Vehicle } from '../../../../core/models/Vehicle';
 import { CustomerService } from '../../../../core/services/customer/Customer.service';
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-customer-vehicle-table',
@@ -27,6 +28,7 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
+  customerVehicleForm!: FormGroup;
 
   private modalIdcustomerVehicle: string = 'customerVehicleModal';
 
@@ -63,9 +65,13 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
 
   async save() {
     try {
-      await lastValueFrom(this.customerVehicleService.create(this.customerVehicle));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.customerVehicleService.create(this.customerVehicle));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error adding customer and associated vehicle: ${error}`);
     }
@@ -73,9 +79,13 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
 
   async update() {
     try {
-      await lastValueFrom(this.customerVehicleService.update(this.customerVehicle.id, this.customerVehicle));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.customerVehicleService.update(this.customerVehicle.id, this.customerVehicle));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error updating customer and associated vehicle: ${error}`);
     }
@@ -189,4 +199,10 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     this.updatePagination();
   }
 
+  validateFields(): boolean {
+    return (
+      !!this.customerVehicle.customerId &&
+      !!this.customerVehicle.vehicleId
+    );
+  }
 }

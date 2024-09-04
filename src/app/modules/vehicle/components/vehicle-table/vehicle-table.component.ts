@@ -4,6 +4,7 @@ import { VehicleService } from '../../../../core/services/vehicle/Vehicle.servic
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-vehicle-table',
@@ -21,6 +22,7 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
+  vehicleForm!: FormGroup;
 
   private modalIdVehicle: string = 'vehicleModal';
 
@@ -54,9 +56,13 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
 
   async save() {
     try {
-      await lastValueFrom(this.vehicleService.create(this.vehicle));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.vehicleService.create(this.vehicle));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error adding vehicle: ${error}`);
     }
@@ -64,9 +70,13 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
 
   async update() {
     try {
-      await lastValueFrom(this.vehicleService.update(this.vehicle.id, this.vehicle));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.vehicleService.update(this.vehicle.id, this.vehicle));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error updating vehicle: ${error}`);
     }
@@ -154,5 +164,15 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.updatePagination();
+  }
+
+  validateFields(): boolean {
+    return (
+      !!this.vehicle.vehicleType &&
+      !!this.vehicle.brand &&
+      !!this.vehicle.model &&
+      !!this.vehicle.color &&
+      !!this.vehicle.vehicleYear
+    );
   }
 }

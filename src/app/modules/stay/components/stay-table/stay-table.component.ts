@@ -8,6 +8,7 @@ import { CustomerService } from '../../../../core/services/customer/Customer.ser
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
 import { Vehicle } from '../../../../core/models/Vehicle';
 import { Customer } from '../../../../core/models/Customer';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-stay-table',
@@ -27,6 +28,7 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
+  stayForm!: FormGroup;
 
   private modalIdStay: string = 'stayModal';
 
@@ -78,9 +80,13 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
 
   async save() {
     try {
-      await lastValueFrom(this.stayService.create(this.stay));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.stayService.create(this.stay));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error adding stay: ${error}`);
     }
@@ -189,5 +195,14 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.updatePagination();
+  }
+
+  validateFields(): boolean {
+    return (
+      !!this.stay.customerVehicleId &&
+      !!this.stay.licensePlate &&
+      !!this.stay.entryDate &&
+      !!this.stay.hourlyRate
+    );
   }
 }
