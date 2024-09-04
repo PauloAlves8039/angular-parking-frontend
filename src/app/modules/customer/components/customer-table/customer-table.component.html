@@ -35,7 +35,7 @@
           <td>{{ customer.name }}</td>
           <td>{{ customer.birthDate | dateformat }}</td>
           <td>{{ customer.cpf | cpfmask}}</td>
-          <td>{{ customer.phone }}</td>
+          <td>{{ customer.phone | phoneformat }}</td>
           <td>{{ customer.email }}</td>
           <td>
             {{ customer.address?.street }},
@@ -99,7 +99,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="phone" class="form-label">Phone <span>*</span></label>
-                <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="customer.phone" required>
+                <input type="text"
+                       id="phone"
+                       name="phone"
+                       class="form-control"
+                       [(ngModel)]="customer.phone"
+                       [value]="customer.phone | phoneformat"
+                       required>
               </div>
             </div>
             <div class="col-md-6">
