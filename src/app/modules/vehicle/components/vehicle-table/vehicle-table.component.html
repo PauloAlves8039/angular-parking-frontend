@@ -1,8 +1,8 @@
 <div class="mt-2">
   <div class="col">
     <div class="d-flex">
-      <div class="ms-2">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (input)="searchVehicles()">
+      <div class="ms-6">
+        <input type="text" class="form-control" placeholder="Search Vehicles" [(ngModel)]="searchTerm" (input)="searchVehicles()">
       </div>
       <div class="ms-2">
         <button class="btn button-danger button-search mb-3" title="Cancel" (click)="clearSearchField()">
@@ -39,18 +39,11 @@
           <td>{{ vehicle.vehicleYear }}</td>
           <td>{{ vehicle.notes || 'N/A' }}</td>
           <td>
-            <button type="button"
-                    class="btn btn-warning btn-sm me-1"
-                    (click)="onUpdate(vehicle)"
-                    title="Update">
-              <i class="bi bi-pencil-square"></i>
+            <button type="button" class="btn button-warning btn-sm me-1" (click)="onUpdate(vehicle)" title="Update">
+              <i class="bi bi-pencil-square"></i> Update
             </button>
-
-            <button type="button"
-                    class="btn btn-danger btn-sm"
-                    (click)="onDelete(vehicle)"
-                    title="Delete">
-              <i class="bi bi-trash-fill"></i>
+            <button type="button" class="btn button-danger btn-sm me-1" (click)="onDelete(vehicle)" title="Delete">
+              <i class="bi bi-trash-fill"></i> Delete
             </button>
           </td>
         </tr>
@@ -79,12 +72,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form #vehicleForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="vehicleType" class="form-label">Type</label>
-                <select id="vehicleType" name="vehicleType" class="form-select" [(ngModel)]="vehicle.vehicleType">
+                <label for="vehicleType" class="form-label">Type <span>*</span></label>
+                <select id="vehicleType" name="vehicleType" class="form-select" [(ngModel)]="vehicle.vehicleType" required>
                   <option value="" disabled>Select type</option>
                   <option value="Carro">Carro</option>
                   <option value="Moto">Moto</option>
@@ -93,32 +86,33 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="brand" class="form-label">Brand</label>
-                <input type="text" id="brand" name="brand" class="form-control" [(ngModel)]="vehicle.brand">
+                <label for="brand" class="form-label">Brand <span>*</span></label>
+                <input type="text" id="brand" name="brand" class="form-control" [(ngModel)]="vehicle.brand" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="model" class="form-label">Model</label>
-                <input type="text" id="model" name="model" class="form-control" [(ngModel)]="vehicle.model">
+                <label for="model" class="form-label">Model <span>*</span></label>
+                <input type="text" id="model" name="model" class="form-control" [(ngModel)]="vehicle.model" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="color" class="form-label">Color</label>
-                <input type="text" id="color" name="color" class="form-control" [(ngModel)]="vehicle.color">
+                <label for="color" class="form-label">Color <span>*</span></label>
+                <input type="text" id="color" name="color" class="form-control" [(ngModel)]="vehicle.color" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="vehicleYear" class="form-label">Ano</label>
+                <label for="vehicleYear" class="form-label">Ano <span>*</span></label>
                 <input type="number"
                        id="vehicleYear"
                        name="vehicleYear"
                        class="form-control input-year"
                        [(ngModel)]="vehicle.vehicleYear"
                        max="9999"
-                       oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);">
+                       oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);"
+                       required>
               </div>
             </div>
             <div class="col-md-6">
@@ -128,18 +122,18 @@
               </div>
             </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+              <i class="bi bi-door-closed-fill"></i> Close
+            </button>
+            <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+              <i class="bi bi-x-square"></i> Clear
+            </button>
+            <button type="button" class="btn button-success" title="Save" [disabled]="!validateFields()" (click)="saveOrUpdate()">
+              <i class="bi bi-floppy-fill"></i> Save
+            </button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-door-closed-fill"></i> Close
-        </button>
-        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Clear
-        </button>
-        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Save
-        </button>
       </div>
     </div>
   </div>

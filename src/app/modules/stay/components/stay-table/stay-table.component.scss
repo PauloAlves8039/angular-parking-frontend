@@ -1,0 +1,19 @@
+.stay-status-parked {
+  background-color: var(--warning-color);
+  color: var(--neutral-color-light);
+}
+
+.stay-status-removed {
+  background-color: var(--success-color);
+  color: var(--neutral-color-light);
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-disabled:disabled {
+  background-color: var(--neutral-color-medium);
+  border-color: var(--neutral-color-medium);
+}

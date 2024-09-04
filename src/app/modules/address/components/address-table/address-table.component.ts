@@ -5,6 +5,7 @@ import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
 import { CheckZipCodeService } from '../../../../shared/services/check-zip-code/CheckZipCode.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-address-table',
@@ -22,6 +23,7 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
+  addressForm!: FormGroup;
 
   states = [
     { acronym: 'AC' }, { acronym: 'AL' }, { acronym: 'AP' }, { acronym: 'AM' },
@@ -66,9 +68,13 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
 
   async save() {
     try {
-      await lastValueFrom(this.addressService.create(this.address));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.addressService.create(this.address));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error adding address: ${error}`);
     }
@@ -76,9 +82,14 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
 
   async update() {
     try {
-      await lastValueFrom(this.addressService.update(this.address.id, this.address));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.addressService.update(this.address.id, this.address));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
+
     } catch (error) {
       console.error(`Error updating address: ${error}`);
     }
@@ -179,4 +190,14 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
     this.updatePagination();
   }
 
+  validateFields(): boolean {
+    return (
+      !!this.address.street &&
+      !!this.address.number &&
+      !!this.address.neighborhood &&
+      !!this.address.federativeUnit &&
+      !!this.address.city &&
+      !!this.address.zipCode
+    );
+  }
 }

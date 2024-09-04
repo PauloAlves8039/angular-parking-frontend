@@ -1,7 +1,7 @@
 <div class="mt-2">
   <div class="col">
     <div class="d-flex">
-      <div class="ms-2">
+      <div class="ms-6">
         <input type="text" class="form-control" placeholder="Search Addresses" [(ngModel)]="searchTerm" (input)="searchAddresses()">
       </div>
       <div class="ms-2">
@@ -41,11 +41,11 @@
           <td>{{ address.city }}</td>
           <td>{{ address.zipCode }}</td>
           <td>
-            <button class="btn btn-warning me-1" (click)="onUpdate(address)" title="Update">
-              <i class="bi bi-pencil-square"></i>
+            <button class="btn button-warning me-1" (click)="onUpdate(address)" title="Update">
+              <i class="bi bi-pencil-square"></i> Update
             </button>
-            <button class="btn btn-danger" (click)="onDelete(address)" title="Delete">
-              <i class="bi bi-trash-fill"></i>
+            <button class="btn button-danger me-1" (click)="onDelete(address)" title="Delete">
+              <i class="bi bi-trash-fill"></i> Delete
             </button>
           </td>
         </tr>
@@ -66,24 +66,25 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addressModalLabel">
-          {{ isUpdateMode ? 'Update Zip Code' : 'Add New Zip Code' }}
+          {{ isUpdateMode ? 'Update Address' : 'Add New Address' }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form  #addressForm="ngForm">
           <div class="row g-3">
             <div class="col-md-8">
               <div class="d-flex">
                 <div class="md-2">
-                  <label for="zipCode" class="form-label">Add zip code</label>
+                  <label for="search-zip-code" class="form-label"></label>
                   <div class="input-group d-flex">
                     <input type="text"
-                           id="zipCode"
-                           name="zipCode"
+                           id="search-zip-code"
+                           name="search-zip-code"
                            class="form-control input-zip-code"
                            maxlength="9"
                            pattern="[0-9]{8}"
+                           placeholder="Add zip code"
                            [(ngModel)]="address.zipCode"
                            (ngModelChange)="address.zipCode"
                            [value]="address.zipCode | zipcodeformat">
@@ -96,16 +97,17 @@
                 </div>
               </div>
             </div>
+            <hr>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="street" class="form-label">Street</label>
-                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="address.street">
+                <label for="street" class="form-label">Street <span>*</span></label>
+                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="address.street" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="number" class="form-label">Number</label>
-                <input type="text" id="number" name="number" class="form-control input-form--sm-1" [(ngModel)]="address.number">
+                <label for="number" class="form-label">Number <span>*</span></label>
+                <input type="text" id="number" name="number" class="form-control input-form--sm-1" [(ngModel)]="address.number" required>
               </div>
             </div>
             <div class="col-md-6">
@@ -117,13 +119,13 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="neighborhood" class="form-label">Neighborhood</label>
-                <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="address.neighborhood">
+                <label for="neighborhood" class="form-label">Neighborhood <span>*</span></label>
+                <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="address.neighborhood" required>
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label for="federativeUnit" class="form-label">State</label>
+                <label for="federativeUnit" class="form-label">State <span>*</span></label>
                 <select id="federativeUnit" name="federativeUnit" class="form-control small-select" [(ngModel)]="address.federativeUnit">
                   <option *ngFor="let state of states" [value]="state.acronym">{{ state.acronym }}</option>
                 </select>
@@ -131,29 +133,30 @@
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label for="city" class="form-label">City</label>
-                <input type="text" id="city" name="city" class="form-control" [(ngModel)]="address.city">
+                <label for="city" class="form-label">City <span>*</span></label>
+                <input type="text" id="city" name="city" class="form-control" [(ngModel)]="address.city" required>
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label for="zipCode" class="form-label">Zip Code</label>
-                <input type="text" id="zipCode" name="zipCode" class="form-control input-zip-code" [(ngModel)]="address.zipCode">
+                <label for="zipCode" class="form-label">Zip Code <span>*</span></label>
+                <input type="text" id="zipCode" name="zipCode" class="form-control input-zip-code" [(ngModel)]="address.zipCode" required>
               </div>
             </div>
           </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+              <i class="bi bi-door-closed-fill"></i> Close
+            </button>
+            <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+              <i class="bi bi-x-square"></i> Clear
+            </button>
+            <button type="button" class="btn button-success" title="Save" [disabled]="!validateFields()" (click)="saveOrUpdate()">
+              <i class="bi bi-floppy-fill"></i> Save
+            </button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-door-closed-fill"></i> Close
-        </button>
-        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Clear
-        </button>
-        <button type="button" class="btn button-success" title="Save" (click)="saveOrUpdate()">
-          <i class="bi bi-floppy-fill"></i> Save
-        </button>
       </div>
     </div>
   </div>

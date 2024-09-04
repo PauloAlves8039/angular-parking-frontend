@@ -6,6 +6,7 @@ import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-
 import { lastValueFrom } from 'rxjs';
 import { AddressService } from '../../../../core/services/address/Address.service';
 import { Address } from '../../../../core/models/Address';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-customer-table',
@@ -24,6 +25,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
+  customerForm!: FormGroup;
 
   private modalIdCustomer: string = 'customerModal';
 
@@ -50,7 +52,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
     try {
       const customers = await lastValueFrom(this.customerService.getAll());
       this.addresses = await lastValueFrom(this.addressService.getAll());
-      this.customers = customers.map(customer => {
+      this.customers = customers.map((customer) => {
         const address = this.getAddressById(customer.addressId);
         return { ...customer, address };
       });
@@ -62,15 +64,19 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   }
 
   getAddressById(addressId: number): Address | undefined {
-    const address = this.addresses.find(address => address.id === addressId);
+    const address = this.addresses.find((address) => address.id === addressId);
     return address;
   }
 
   async save() {
     try {
-      await lastValueFrom(this.customerService.create(this.customer));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.customerService.create(this.customer));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error adding customer: ${error}`);
     }
@@ -78,9 +84,13 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
 
   async update() {
     try {
-      await lastValueFrom(this.customerService.update(this.customer.id, this.customer));
-      this.getAll();
-      this.resetModal();
+      if (this.validateFields()) {
+        await lastValueFrom(this.customerService.update(this.customer.id, this.customer));
+        this.getAll();
+        this.resetModal();
+      } else {
+        alert('Please fill in all required fields');
+      }
     } catch (error) {
       console.error(`Error updating customer: ${error}`);
     }
@@ -110,8 +120,8 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
           customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           customer.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           customer.cpf.includes(this.searchTerm) ||
-          (customer.address?.street.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-           customer.address?.city.toLowerCase().includes(this.searchTerm.toLowerCase()))
+          customer.address?.street.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          customer.address?.city.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
       this.filteredCustomers = [...this.customers];
@@ -177,5 +187,16 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.updatePagination();
+  }
+
+  validateFields(): boolean {
+    return (
+      !!this.customer.name &&
+      !!this.customer.birthDate &&
+      !!this.customer.cpf &&
+      !!this.customer.phone &&
+      !!this.customer.email &&
+      !!this.customer.addressId
+    );
   }
 }

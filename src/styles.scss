@@ -7,14 +7,14 @@
 
 :root {
   --primary-color: #00BFFF;
-  --secundary-color: #03f3f3;
+  --secundary-color: #03F3F3;
   --info-color: #1E90FF;
-  --success-color: #00CD00;
+  --success-color: #05B505;
   --danger-color: #FF4500;
   --warning-color: #FFB90F;
   --neutral-color-light: #FFFFFF;
   --neutral-color-medium: #9C9C9C;
-  --neutral-color-dark: #f7f4f4;
+  --neutral-color-dark: #F7F4F4;
   --dark-color: #000000;
   --background-transparent: rgba(0, 0, 0, 0.5);
 }
@@ -29,6 +29,11 @@
 .page-title, .page-subtitle {
   text-align: center;
   color: var(--primary-color);
+}
+
+.icon-size {
+  font-size: 1.8rem;
+  vertical-align: auto;
 }
 
 .input-form {

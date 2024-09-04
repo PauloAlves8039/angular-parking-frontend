@@ -1,7 +1,7 @@
 <div class="mt-2">
   <div class="col">
     <div class="d-flex">
-      <div class="ms-2">
+      <div class="ms-6">
         <input type="text" class="form-control" placeholder="Search Stays" [(ngModel)]="searchTerm" (input)="searchStays()">
       </div>
       <div class="ms-2">
@@ -39,16 +39,22 @@
           <td>{{ stay.exitDate ? (stay.exitDate | datehour) : 'N/A' }}</td>
           <td>{{ stay.hourlyRate | real }}</td>
           <td>{{ stay.totalAmount ? (stay.totalAmount | real) : 'N/A' }}</td>
-          <td>{{ stay.stayStatus }}</td>
+          <td [ngClass]="{
+            'stay-status-parked': stay.stayStatus === 'Estacionado',
+            'stay-status-removed': stay.stayStatus === 'Retirado'
+          }">
+            {{ stay.stayStatus }}
+          </td>
           <td>
-            <button class="btn btn-warning btn-sm me-1" (click)="onUpdate(stay)" title="Update">
-              <i class="bi bi-pencil-square"></i>
+            <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish"
+              [disabled]="stay.stayStatus === 'Retirado'" [ngClass]="{'btn-disabled': stay.stayStatus === 'Retirado'}">
+              <i class="bi bi-pencil-square"></i> Finish
             </button>
-            <button class="btn btn-primary btn-sm me-1" (click)="onGeneratePdf(stay)" title="Generate Ticket">
-              <i class="bi bi-file-earmark-pdf-fill"></i>
+            <button class="btn button-info btn-sm me-1" (click)="onGeneratePdf(stay)" title="Generate Ticket">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Ticket
             </button>
-            <button class="btn btn-danger btn-sm" (click)="onDelete(stay)" title="Delete">
-              <i class="bi bi-trash-fill"></i>
+            <button class="btn button-danger btn-sm me-1" (click)="onDelete(stay)" title="Delete">
+              <i class="bi bi-trash-fill"></i> Delete
             </button>
           </td>
         </tr>
@@ -74,12 +80,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form #stayForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="customerVehicleId" class="form-label">Customer</label>
+                <label for="customerVehicleId" class="form-label">Customer <span>*</span></label>
                 <select id="customerVehicleId" name="customerVehicleId" class="form-control" [(ngModel)]="stay.customerVehicleId">
+                  <option value="" disabled selected>Select Customer</option>
                   <option *ngFor="let customer of customers" [value]="customer.id">
                     {{ customer.name }}
                   </option>
@@ -88,13 +95,13 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="licensePlate" class="form-label">License Plate</label>
+                <label for="licensePlate" class="form-label">License Plate <span>*</span></label>
                 <input type="text" id="licensePlate" name="licensePlate" class="form-control" [(ngModel)]="stay.licensePlate">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="entryDate" class="form-label">Entry Date</label>
+                <label for="entryDate" class="form-label">Entry Date <span>*</span></label>
                 <input type="datetime-local" id="entryDate" name="entryDate" class="form-control" [(ngModel)]="stay.entryDate">
               </div>
             </div>
@@ -109,18 +116,18 @@
               </div>
             </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+              <i class="bi bi-door-closed-fill"></i> Close
+            </button>
+            <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+              <i class="bi bi-x-square"></i> Clear
+            </button>
+            <button type="button" class="btn button-success" title="Save" [disabled]="!validateFields()" (click)="save()">
+              <i class="bi bi-floppy-fill"></i> Save
+            </button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-          <i class="bi bi-door-closed-fill"></i> Close
-        </button>
-        <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
-          <i class="bi bi-x-square"></i> Clear
-        </button>
-        <button type="button" class="btn button-success" title="Save" (click)="save()">
-          <i class="bi bi-floppy-fill"></i> Save
-        </button>
       </div>
     </div>
   </div>
