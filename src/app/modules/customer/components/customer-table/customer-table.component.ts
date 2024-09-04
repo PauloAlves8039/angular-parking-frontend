@@ -118,16 +118,10 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
       this.filteredCustomers = this.customers.filter(
         (customer: Customer) =>
           customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          customer.email
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase()) ||
+          customer.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           customer.cpf.includes(this.searchTerm) ||
-          customer.address?.street
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase()) ||
-          customer.address?.city
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase())
+          customer.address?.street.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          customer.address?.city.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
       this.filteredCustomers = [...this.customers];
@@ -153,9 +147,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   }
 
   onDelete(customer: Customer) {
-    if (
-      confirm(`Do you really want to delete the customer ${customer.name}?`)
-    ) {
+    if (confirm(`Do you really want to delete the customer ${customer.name}?`)) {
       this.delete(customer.id);
     }
   }
@@ -184,9 +176,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(
-      this.filteredCustomers.length / this.itemsPerPage
-    );
+    this.totalPages = Math.ceil(this.filteredCustomers.length / this.itemsPerPage);
     this.pagedCustomers = this.filteredCustomers.slice(
       (this.currentPage - 1) * this.itemsPerPage,
       this.currentPage * this.itemsPerPage

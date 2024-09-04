@@ -36,11 +36,11 @@
           <td>{{ getCustomerName(customerVehicle.customerId) }}</td>
           <td>{{ getVehicleModel(customerVehicle.vehicleId) }}</td>
           <td>
-            <button type="button" class="btn btn-warning btn-sm me-1" (click)="onUpdate(customerVehicle)" title="Update">
-              <i class="bi bi-pencil-square"></i>
+            <button type="button" class="btn button-warning btn-sm me-1" (click)="onUpdate(customerVehicle)" title="Update">
+              <i class="bi bi-pencil-square"></i> Update
             </button>
-            <button type="button" class="btn btn-danger btn-sm" (click)="onDelete(customerVehicle)" title="Delete">
-              <i class="bi bi-trash-fill"></i>
+            <button type="button" class="btn button-danger btn-sm me-1" (click)="onDelete(customerVehicle)" title="Delete">
+              <i class="bi bi-trash-fill"></i> Delete
             </button>
           </td>
         </tr>

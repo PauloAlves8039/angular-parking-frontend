@@ -41,14 +41,14 @@
           <td>{{ stay.totalAmount ? (stay.totalAmount | real) : 'N/A' }}</td>
           <td>{{ stay.stayStatus }}</td>
           <td>
-            <button class="btn btn-warning btn-sm me-1" (click)="onUpdate(stay)" title="Update">
-              <i class="bi bi-pencil-square"></i>
+            <button class="btn button-success btn-sm me-1" (click)="onUpdate(stay)" title="Finish">
+              <i class="bi bi-pencil-square"></i> Finish
             </button>
-            <button class="btn btn-primary btn-sm me-1" (click)="onGeneratePdf(stay)" title="Generate Ticket">
-              <i class="bi bi-file-earmark-pdf-fill"></i>
+            <button class="btn button-info btn-sm me-1" (click)="onGeneratePdf(stay)" title="Generate Ticket">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Ticket
             </button>
-            <button class="btn btn-danger btn-sm" (click)="onDelete(stay)" title="Delete">
-              <i class="bi bi-trash-fill"></i>
+            <button class="btn button-danger btn-sm me-1" (click)="onDelete(stay)" title="Delete">
+              <i class="bi bi-trash-fill"></i> Delete
             </button>
           </td>
         </tr>
