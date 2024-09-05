@@ -30,6 +30,8 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   itemsPerPage: number = 5;
   totalPages: number = 1;
   stayForm!: FormGroup;
+  customerVehicleOptions: { customer: Customer; vehicle: Vehicle; display: string }[] = [];
+  selectedOption: { customer: Customer; vehicle: Vehicle } | null = null;
 
   private modalIdStay: string = 'stayModal';
 
@@ -49,17 +51,23 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
 
   async loadCustomers() {
     try {
-      this.customers = await lastValueFrom(this.stayService.getAllCustomers());
+      const customers = await this.customerService.getAll().toPromise();
+      this.customers = customers || [];
+      this.updateCustomerVehicleOptions();
     } catch (error) {
       this.notificationService.showError(`Error loading customers: ${error}`, 'Error');
+      this.customers = [];
     }
   }
 
   async loadVehicles() {
     try {
-      this.vehicles = await lastValueFrom(this.stayService.getAllVehicles());
+      const vehicles = await this.vehicleService.getAll().toPromise();
+      this.vehicles = vehicles || [];
+      this.updateCustomerVehicleOptions();
     } catch (error) {
       this.notificationService.showError(`Error loading vehicles: ${error}`, 'Error');
+      this.vehicles = [];
     }
   }
 
@@ -127,6 +135,20 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     } catch (error) {
       this.notificationService.showError(`Error generating PDF ${error}`, 'Error');
     }
+  }
+
+  updateCustomerVehicleOptions() {
+    this.customerVehicleOptions = this.customers.flatMap(customer =>
+      this.vehicles.map(vehicle => ({customer, vehicle,
+        display: `${customer.name} - ${vehicle.brand} - ${vehicle.model}`
+      }))
+    );
+  }
+
+  onCustomerVehicleChange(selectedOption: { customer: Customer; vehicle: Vehicle }) {
+    this.selectedOption = selectedOption;
+    this.stay.customerVehicleId = selectedOption.customer.id;
+    this.stay.customerVehicleId = selectedOption.vehicle.id;
   }
 
   searchStays() {
