@@ -7,6 +7,7 @@ import { lastValueFrom } from 'rxjs';
 import { AddressService } from '../../../../core/services/address/Address.service';
 import { Address } from '../../../../core/models/Address';
 import { FormGroup } from '@angular/forms';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-customer-table',
@@ -32,7 +33,8 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
   constructor(
     private customerService: CustomerService,
     private modalService: ModalService,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -59,7 +61,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
       this.filteredCustomers = [...this.customers];
       this.updatePagination();
     } catch (error) {
-      console.error(`Error loading all customers: ${error}`);
+      this.notificationService.showError(`Error loading all customers: ${error}`, 'Error');
     }
   }
 
@@ -74,11 +76,12 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
         await lastValueFrom(this.customerService.create(this.customer));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Customer added successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error adding customer: ${error}`);
+      this.notificationService.showError(`Error adding customer: ${error}`, 'Error');
     }
   }
 
@@ -88,20 +91,24 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
         await lastValueFrom(this.customerService.update(this.customer.id, this.customer));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Customer updated successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error updating customer: ${error}`);
+      this.notificationService.showError(`Error updating customer: ${error}`, 'Error');
     }
   }
 
   async delete(id: number) {
-    try {
-      await lastValueFrom(this.customerService.delete(id));
-      this.getAll();
-    } catch (error) {
-      console.error(`Error deleting customer: ${error}`);
+    if (confirm(`Do you really want to delete the customer?`)) {
+      try {
+        await lastValueFrom(this.customerService.delete(id));
+        this.getAll();
+        this.notificationService.showSuccess('Customer deleted successfully!', 'Success');
+      } catch (error) {
+        this.notificationService.showError(`Error deleting customer: ${error}`, 'Error');
+      }
     }
   }
 
@@ -109,7 +116,7 @@ export class CustomerTableComponent implements OnInit, BaseComponent<Customer> {
     try {
       this.addresses = await lastValueFrom(this.addressService.getAll());
     } catch (error) {
-      console.error(`Error loading all addresses: ${error}`);
+      this.notificationService.showError(`Error loading all addresses: ${error}`, 'Error');
     }
   }
 

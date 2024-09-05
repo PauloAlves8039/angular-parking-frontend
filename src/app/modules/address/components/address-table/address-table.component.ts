@@ -6,6 +6,7 @@ import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-
 import { lastValueFrom } from 'rxjs';
 import { CheckZipCodeService } from '../../../../shared/services/check-zip-code/CheckZipCode.service';
 import { FormGroup } from '@angular/forms';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-address-table',
@@ -40,7 +41,8 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
   constructor(
     private addressService: AddressService,
     private modalService: ModalService,
-    private checkZipCodeService: CheckZipCodeService
+    private checkZipCodeService: CheckZipCodeService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
       this.filteredAddresses = [...this.addresses];
       this.updatePagination();
     } catch (error) {
-      console.error(`Error loading all addresses: ${error}`);
+      this.notificationService.showError(`Error loading all addresses: ${error}`, 'Error');
     }
   }
 
@@ -72,11 +74,12 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
         await lastValueFrom(this.addressService.create(this.address));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Address added successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error adding address: ${error}`);
+      this.notificationService.showError(`Error adding address: ${error}`, 'Error');
     }
   }
 
@@ -86,12 +89,12 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
         await lastValueFrom(this.addressService.update(this.address.id, this.address));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Address updated successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
-
     } catch (error) {
-      console.error(`Error updating address: ${error}`);
+      this.notificationService.showError(`Error updating address: ${error}`, 'Error');
     }
   }
 
@@ -99,8 +102,9 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
     try {
       await lastValueFrom(this.addressService.delete(id));
       this.getAll();
+      this.notificationService.showSuccess('Address deleted successfully!', 'Success');
     } catch (error) {
-      console.error(`Error deleting address: ${error}`);
+      this.notificationService.showError(`Error deleting address: ${error}`, 'Error');
     }
   }
 
@@ -112,10 +116,12 @@ export class AddressTableComponent implements OnInit, BaseComponent<Address> {
       this.address.city = result.localidade;
       this.address.federativeUnit = result.uf;
       this.address.zipCode = result.cep;
+      this.notificationService.showInfo('ZIP code successfully found!', 'Info');
     } catch (error) {
-      alert(`Error searching for ZIP code. Check that the zip code is correct and try again: ${error}`);
+      this.notificationService.showError(`Error searching for ZIP code: ${error}`, 'Error');
     }
   }
+
 
   searchAddresses() {
     if (this.searchTerm.trim() !== '') {
