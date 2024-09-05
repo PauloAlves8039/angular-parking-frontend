@@ -5,6 +5,7 @@ import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-vehicle-table',
@@ -28,7 +29,8 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
 
   constructor(
     private vehicleService: VehicleService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -50,7 +52,7 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
       this.filteredVehicles = [...this.vehicles];
       this.updatePagination();
     } catch (error) {
-      console.error(`Error loading all vehicles: ${error}`);
+      this.notificationService.showError(`Error loading all vehicles: ${error}`, 'Error');
     }
   }
 
@@ -60,11 +62,12 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
         await lastValueFrom(this.vehicleService.create(this.vehicle));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Vehicle added successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error adding vehicle: ${error}`);
+      this.notificationService.showError(`Error adding vehicle: ${error}`, 'Error');
     }
   }
 
@@ -74,11 +77,12 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
         await lastValueFrom(this.vehicleService.update(this.vehicle.id, this.vehicle));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Vehicle updated successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error updating vehicle: ${error}`);
+      this.notificationService.showError(`Error updating vehicle: ${error}`, 'Error');
     }
   }
 
@@ -86,8 +90,9 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
     try {
       await lastValueFrom(this.vehicleService.delete(id));
       this.getAll();
+      this.notificationService.showSuccess('Vehicle deleted successfully!', 'Success');
     } catch (error) {
-      console.error(`Error deleting vehicle: ${error}`);
+      this.notificationService.showError(`Error deleting vehicle: ${error}`, 'Error');
     }
   }
 

@@ -9,6 +9,7 @@ import { VehicleService } from '../../../../core/services/vehicle/Vehicle.servic
 import { Vehicle } from '../../../../core/models/Vehicle';
 import { Customer } from '../../../../core/models/Customer';
 import { FormGroup } from '@angular/forms';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-stay-table',
@@ -29,6 +30,8 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   itemsPerPage: number = 5;
   totalPages: number = 1;
   stayForm!: FormGroup;
+  customerVehicleOptions: { customer: Customer; vehicle: Vehicle; display: string }[] = [];
+  selectedOption: { customer: Customer; vehicle: Vehicle } | null = null;
 
   private modalIdStay: string = 'stayModal';
 
@@ -36,7 +39,8 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     private stayService: StayService,
     private customerService: CustomerService,
     private vehicleService: VehicleService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -47,17 +51,23 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
 
   async loadCustomers() {
     try {
-      this.customers = await lastValueFrom(this.stayService.getAllCustomers());
+      const customers = await this.customerService.getAll().toPromise();
+      this.customers = customers || [];
+      this.updateCustomerVehicleOptions();
     } catch (error) {
-      console.error(`Error loading customers: ${error}`);
+      this.notificationService.showError(`Error loading customers: ${error}`, 'Error');
+      this.customers = [];
     }
   }
 
   async loadVehicles() {
     try {
-      this.vehicles = await lastValueFrom(this.stayService.getAllVehicles());
+      const vehicles = await this.vehicleService.getAll().toPromise();
+      this.vehicles = vehicles || [];
+      this.updateCustomerVehicleOptions();
     } catch (error) {
-      console.error(`Error loading vehicles: ${error}`);
+      this.notificationService.showError(`Error loading vehicles: ${error}`, 'Error');
+      this.vehicles = [];
     }
   }
 
@@ -74,7 +84,7 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
       this.filteredStays = [...this.stays];
       this.updatePagination();
     } catch (error) {
-      console.error(`Error loading all stays: ${error}`);
+      this.notificationService.showError(`Error loading all stays: ${error}`, 'Error');
     }
   }
 
@@ -84,11 +94,12 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
         await lastValueFrom(this.stayService.create(this.stay));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Stay added successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error adding stay: ${error}`);
+      this.notificationService.showError(`Error adding stay: ${error}`, 'Error');
     }
   }
 
@@ -96,8 +107,9 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     try {
       await lastValueFrom(this.stayService.update(stay.id, stay));
       this.getAll();
+      this.notificationService.showSuccess('Stay finished successfully!', 'Success');
     } catch (error) {
-      console.error(`Error updating stay: ${error}`);
+      this.notificationService.showError(`Error finished stay: ${error}`, 'Error');
     }
   }
 
@@ -105,8 +117,9 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     try {
       await lastValueFrom(this.stayService.delete(id));
       this.getAll();
+      this.notificationService.showSuccess('Stay deleted successfully!', 'Success');
     } catch (error) {
-      console.error(`Error deleting stay: ${error}`);
+      this.notificationService.showError(`Error deleting stay: ${error}`, 'Error');
     }
   }
 
@@ -120,8 +133,22 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error(`Error generating PDF: ${error}`);
+      this.notificationService.showError(`Error generating PDF ${error}`, 'Error');
     }
+  }
+
+  updateCustomerVehicleOptions() {
+    this.customerVehicleOptions = this.customers.flatMap(customer =>
+      this.vehicles.map(vehicle => ({customer, vehicle,
+        display: `${customer.name} - ${vehicle.brand} - ${vehicle.model}`
+      }))
+    );
+  }
+
+  onCustomerVehicleChange(selectedOption: { customer: Customer; vehicle: Vehicle }) {
+    this.selectedOption = selectedOption;
+    this.stay.customerVehicleId = selectedOption.customer.id;
+    this.stay.customerVehicleId = selectedOption.vehicle.id;
   }
 
   searchStays() {

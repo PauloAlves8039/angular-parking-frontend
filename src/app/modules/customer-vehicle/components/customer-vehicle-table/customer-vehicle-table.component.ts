@@ -9,6 +9,7 @@ import { Vehicle } from '../../../../core/models/Vehicle';
 import { CustomerService } from '../../../../core/services/customer/Customer.service';
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
 import { FormGroup } from '@angular/forms';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-customer-vehicle-table',
@@ -36,7 +37,8 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     private customerVehicleService: CustomerVehicleService,
     private modalService: ModalService,
     private customerService: CustomerService,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -59,7 +61,7 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
       this.filteredCustomerVehicle = [...this.customersVehicles];
       this.updatePagination();
     } catch (error) {
-      console.error(`Error loading all customers and associated vehicles: ${error}`);
+      this.notificationService.showError(`Error loading all customers and associated vehicles: ${error}`, 'Error');
     }
   }
 
@@ -69,11 +71,12 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
         await lastValueFrom(this.customerVehicleService.create(this.customerVehicle));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Association added successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error adding customer and associated vehicle: ${error}`);
+      this.notificationService.showError(`Error adding association: ${error}`, 'Error');
     }
   }
 
@@ -83,11 +86,12 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
         await lastValueFrom(this.customerVehicleService.update(this.customerVehicle.id, this.customerVehicle));
         this.getAll();
         this.resetModal();
+        this.notificationService.showSuccess('Association updated successfully!', 'Success');
       } else {
-        alert('Please fill in all required fields');
+        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
     } catch (error) {
-      console.error(`Error updating customer and associated vehicle: ${error}`);
+      this.notificationService.showError(`Error updating association: ${error}`, 'Error');
     }
   }
 
@@ -95,8 +99,9 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     try {
       await lastValueFrom(this.customerVehicleService.delete(id));
       this.getAll();
+      this.notificationService.showSuccess('Association deleted successfully!', 'Success');
     } catch (error) {
-      console.error(`Error deleting customer and associated vehicle: ${error}`);
+      this.notificationService.showError(`Error deleting association: ${error}`, 'Error');
     }
   }
 
@@ -105,7 +110,7 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
       this.customers = await lastValueFrom(this.customerService.getAll());
       this.vehicles = await lastValueFrom(this.vehicleService.getAll());
     } catch (error) {
-      console.error('Error loading customers or vehicles:', error);
+      this.notificationService.showError(`Error loading customers or vehicles: ${error}`, 'Error');
     }
   }
 
