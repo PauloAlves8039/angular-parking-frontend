@@ -1,0 +1,33 @@
+<div class="fullscreen-background"></div>
+<div class="container mt-5 position-relative">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-sm translucent-card">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Register</h2>
+          <form (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email:</label>
+              <input type="email" id="email" [(ngModel)]="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password:</label>
+              <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password:</label>
+              <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" required>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">Register</button>
+              <button type="button" class="btn btn-secondary" (click)="clearForm()">Cancel</button>
+              <button type="button" class="btn btn-link" (click)="goToLogin()">Back to Login</button>
+            </div>
+          </form>
+          <p *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
