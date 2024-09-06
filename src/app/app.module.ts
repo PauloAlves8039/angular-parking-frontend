@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './modules/home/home.module';
 import { SharedModule } from './shared/shared.module';
 import { AddressModule } from './modules/address/address.module';
@@ -13,6 +13,8 @@ import { CustomerVehicleModule } from './modules/customer-vehicle/customer-vehic
 import { StayModule } from './modules/stay/stay.module';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthModule } from './modules/auth/auth.module';
+import { TokenInterceptor } from './core/interceptors/token-interceptor';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     VehicleModule,
     CustomerVehicleModule,
     StayModule,
+    AuthModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
@@ -36,7 +39,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       preventDuplicates: true,
     }),
   ],
-  providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'}],
+  providers: [{ provide: 'BASE_API_URL', useValue: 'https://localhost:7199/api'},
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
