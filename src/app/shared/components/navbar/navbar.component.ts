@@ -9,12 +9,17 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   isAuthenticated: boolean = false;
+  userEmail: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.updateAuthenticationStatus();
     this.addSidebarToggleEvent();
+
+    if (this.isAuthenticated) {
+      this.userEmail = this.authService.getEmailFromToken();
+    }
 
     this.router.events.subscribe(() => {
       this.updateAuthenticationStatus();
