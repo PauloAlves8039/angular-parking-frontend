@@ -1,3 +1,4 @@
+import { AuthHelper } from './helpers/auth-helper';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +15,7 @@ import { RegisterComponent } from './components/register/register.component';
     FormsModule,
     RouterModule.forChild(AUTH_ROUTES)
   ],
-  providers: [AuthGuard],
+  providers: [AuthGuard, AuthHelper],
   exports: [
     AuthComponent,
     RegisterComponent

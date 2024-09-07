@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { AuthHelper } from '../../helpers/auth-helper';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,11 @@ export class RegisterComponent implements OnInit {
   confirmPassword: string = '';
   errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private authHelper: AuthHelper
+  ) {}
 
   ngOnInit() {}
 
@@ -45,9 +50,7 @@ export class RegisterComponent implements OnInit {
   }
 
   clearForm() {
-    this.email = '';
-    this.password = '';
-    this.confirmPassword = '';
+    this.authHelper.clearAuthFields(this);
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { AuthHelper } from '../../helpers/auth-helper';
 
 @Component({
   selector: 'app-auth',
@@ -11,7 +12,11 @@ export class AuthComponent implements OnInit {
   email: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private authHelper: AuthHelper
+  ) {}
 
   ngOnInit() {}
 
@@ -27,6 +32,10 @@ export class AuthComponent implements OnInit {
   goToRegister() {
     this.router.navigate(['/auth/register']);
     console.log(`Navigate to register!`);
+  }
+
+  clearForm() {
+    this.authHelper.clearAuthFields(this);
   }
 
 }
