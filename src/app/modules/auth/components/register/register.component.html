@@ -19,9 +19,9 @@
               <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" required>
             </div>
             <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary">Register</button>
-              <button type="button" class="btn btn-secondary" (click)="clearForm()">Cancel</button>
-              <button type="button" class="btn btn-link" (click)="goToLogin()">Back to Login</button>
+              <button type="submit" class="btn button-success w-100">Register</button>
+              <button type="button" class="btn button-cancel w-100" (click)="clearForm()">Cancel</button>
+              <button type="button" class="btn button-info w-100" (click)="goToLogin()">Back to Login</button>
             </div>
           </form>
           <p *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
