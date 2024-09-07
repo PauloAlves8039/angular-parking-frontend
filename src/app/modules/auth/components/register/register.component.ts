@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { AuthHelper } from '../../helpers/auth-helper';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -13,11 +14,13 @@ export class RegisterComponent implements OnInit {
   password: string = '';
   confirmPassword: string = '';
   errorMessage: string | null = null;
+  timeValue: number = 2000;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private authHelper: AuthHelper
+    private authHelper: AuthHelper,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {}
@@ -36,11 +39,14 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(user).subscribe({
       next: () => {
-        this.router.navigate(['/login']);
+        this.notificationService.showSuccess('Registration successful!', 'Success');
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, this.timeValue);
       },
       error: (error) => {
         this.errorMessage = 'Registration failed. Please try again.';
-        console.error('Registration error', error);
+        this.notificationService.showError(`Registration failed: ${error}`, 'Registration error');
       }
     });
   }
@@ -53,4 +59,7 @@ export class RegisterComponent implements OnInit {
     this.authHelper.clearAuthFields(this);
   }
 
+  validateFields() {
+    this.authHelper.validateAuthFields(this);
+  }
 }

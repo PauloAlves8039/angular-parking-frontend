@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { AuthHelper } from '../../helpers/auth-helper';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +16,8 @@ export class AuthComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private authHelper: AuthHelper
+    private authHelper: AuthHelper,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {}
@@ -25,17 +27,19 @@ export class AuthComponent implements OnInit {
       .login({ email: this.email, password: this.password })
       .subscribe({
         next: () => this.router.navigate(['/home']),
-        error: (error) => console.error('Login failed', error),
+        error: (error) => this.notificationService.showError(`Login failed: ${error}`, 'Check your email or password'),
       });
   }
-
+  
   goToRegister() {
     this.router.navigate(['/auth/register']);
-    console.log(`Navigate to register!`);
   }
 
   clearForm() {
     this.authHelper.clearAuthFields(this);
   }
 
+  validateFields() {
+    this.authHelper.validateAuthFields(this);
+  }
 }
