@@ -26,8 +26,18 @@
   --extra-large-spacing: 40px;
 }
 
+body {
+  font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 .page-title, .page-subtitle {
   text-align: center;
+  color: var(--primary-color);
+}
+
+.title-login {
   color: var(--primary-color);
 }
 
@@ -116,6 +126,24 @@
 
 .button-cancel {
   @include button-style(var(--dark-color), var(--dark-color));
+}
+
+.fullscreen-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/images/parking3.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.translucent-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
 }
 
 .table-responsive {
