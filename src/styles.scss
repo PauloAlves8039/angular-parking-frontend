@@ -26,6 +26,12 @@
   --extra-large-spacing: 40px;
 }
 
+body {
+  font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 .page-title, .page-subtitle {
   text-align: center;
   color: var(--primary-color);
