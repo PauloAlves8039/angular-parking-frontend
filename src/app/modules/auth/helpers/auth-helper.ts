@@ -1,4 +1,6 @@
 export class AuthHelper {
+  timeValue: number = 3000;
+
   constructor() {}
 
   clearAuthFields(component: { email: string, password: string, confirmPassword?: string }) {
@@ -18,6 +20,12 @@ export class AuthHelper {
     }
 
     return emailAndPasswordValid;
+  }
+
+  reloadAuth() {
+    setTimeout(() => {
+      window.location.reload();
+    }, this.timeValue);
   }
 
 }
