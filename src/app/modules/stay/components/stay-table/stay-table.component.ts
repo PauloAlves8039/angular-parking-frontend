@@ -104,14 +104,21 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   }
 
   async update(stay: Stay) {
-    try {
-      await lastValueFrom(this.stayService.update(stay.id, stay));
-      this.getAll();
-      this.notificationService.showSuccess('Stay finished successfully!', 'Success');
-    } catch (error) {
-      this.notificationService.showError(`Error finished stay: ${error}`, 'Error');
+    const confirmFinish = window.confirm('Are you sure you want to finish this stay?');
+
+    if (confirmFinish) {
+      try {
+        await lastValueFrom(this.stayService.update(stay.id, stay));
+        this.getAll();
+        this.notificationService.showSuccess('Stay finished successfully!', 'Success');
+      } catch (error) {
+        this.notificationService.showError(`Error finishing stay: ${error}`, 'Error');
+      }
+    } else {
+      this.notificationService.showInfo('Stay was not finished.', 'Cancelled');
     }
   }
+
 
   async delete(id: number) {
     try {
