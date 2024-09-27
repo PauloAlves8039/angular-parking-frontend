@@ -34,9 +34,7 @@
       <tbody>
         <tr *ngFor="let stay of pagedStays">
           <td>
-            {{ stay.customer?.name }} -
-            {{ stay.vehicle?.brand }}
-            {{ stay.vehicle?.model }}
+            {{ getCustomerVehicle(stay) }}
           </td>
           <td>{{ stay.licensePlate }}</td>
           <td>{{ stay.entryDate | datehour }}</td>
@@ -88,15 +86,10 @@
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3">
-                <label for="customerVehicleId" class="form-label">Customer - Vehicle <span>*</span></label>
-                <select id="customerVehicleId"
-                        name="customerVehicleId"
-                        class="form-control"
-                        [(ngModel)]="selectedOption"
-                        (ngModelChange)="onCustomerVehicleChange($event)">
-                  <option value="" disabled>Select Customer - Vehicle</option>
-                  <option *ngFor="let option of customerVehicleOptions" [ngValue]="option">
-                    {{ option.display }}
+                <label for="customerVehicleSelect" class="form-label">Select Customer Vehicle:</label>
+                <select id="customerVehicleSelect" [(ngModel)]="stay.customerVehicleId" name="customerVehicle" class="form-control">
+                  <option *ngFor="let vehicle of customerVehicleDetails" [value]="vehicle.id">
+                    {{ vehicle.customerName }} - {{ vehicle.vehicleBrand }}
                   </option>
                 </select>
               </div>

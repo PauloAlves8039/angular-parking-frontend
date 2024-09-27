@@ -4,10 +4,6 @@ import { StayService } from '../../../../core/services/stay/Stay.service';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
 import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
-import { CustomerService } from '../../../../core/services/customer/Customer.service';
-import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
-import { Vehicle } from '../../../../core/models/Vehicle';
-import { Customer } from '../../../../core/models/Customer';
 import { FormGroup } from '@angular/forms';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
@@ -18,8 +14,6 @@ import { NotificationService } from '../../../../shared/services/notification/no
 })
 export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   stays: Stay[] = [];
-  customers: Customer[] = [];
-  vehicles: Vehicle[] = [];
   filteredStays: Stay[] = [];
   pagedStays: Stay[] = [];
   stay: Stay = new Stay();
@@ -30,62 +24,44 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   itemsPerPage: number = 5;
   totalPages: number = 1;
   stayForm!: FormGroup;
-  customerVehicleOptions: { customer: Customer; vehicle: Vehicle; display: string }[] = [];
-  selectedOption: { customer: Customer; vehicle: Vehicle } | null = null;
+  customerVehicleDetails: any[] = [];
 
   private modalIdStay: string = 'stayModal';
 
   constructor(
     private stayService: StayService,
-    private customerService: CustomerService,
-    private vehicleService: VehicleService,
     private modalService: ModalService,
     private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
     this.getAll();
-    this.loadCustomers();
-    this.loadVehicles();
-  }
-
-  async loadCustomers() {
-    try {
-      const customers = await this.customerService.getAll().toPromise();
-      this.customers = customers || [];
-      this.updateCustomerVehicleOptions();
-    } catch (error) {
-      this.notificationService.showError(`Error loading customers: ${error}`, 'Error');
-      this.customers = [];
-    }
-  }
-
-  async loadVehicles() {
-    try {
-      const vehicles = await this.vehicleService.getAll().toPromise();
-      this.vehicles = vehicles || [];
-      this.updateCustomerVehicleOptions();
-    } catch (error) {
-      this.notificationService.showError(`Error loading vehicles: ${error}`, 'Error');
-      this.vehicles = [];
-    }
+    this.getCustomerVehicleDetails();
   }
 
   async getAll() {
     try {
       const stays = await lastValueFrom(this.stayService.getAll());
-      this.stays = await Promise.all(stays.map(async stay => {
-        if (stay.customerVehicleId) {
-          stay.customer = await this.customerService.getById(stay.customerVehicleId).toPromise();
-          stay.vehicle = await this.vehicleService.getById(stay.customerVehicleId).toPromise();
-        }
-        return stay;
-      }));
+      this.stays = stays;
       this.filteredStays = [...this.stays];
       this.updatePagination();
     } catch (error) {
       this.notificationService.showError(`Error loading all stays: ${error}`, 'Error');
     }
+  }
+
+  async getCustomerVehicleDetails() {
+    try {
+      const details = await lastValueFrom(this.stayService.getCustomerVehicleDetails());
+      this.customerVehicleDetails = details;
+    } catch (error) {
+      this.notificationService.showError(`Error loading customer vehicle details: ${error}`,'Error');
+    }
+  }
+
+  getCustomerVehicle(stay: Stay) {
+    const customerVehicle = this.customerVehicleDetails.find(cv => cv.id === stay.customerVehicleId);
+    return customerVehicle ? `${customerVehicle.customerName} - ${customerVehicle.vehicleBrand}` : 'N/A';
   }
 
   async save() {
@@ -94,7 +70,7 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
         await lastValueFrom(this.stayService.create(this.stay));
         this.getAll();
         this.resetModal();
-        this.notificationService.showSuccess('Stay added successfully!', 'Success');
+        this.notificationService.showSuccess('Stay added successfully!','Success');
       } else {
         this.notificationService.showWarning('Please fill in all required fields', 'Warning');
       }
@@ -110,7 +86,7 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
       try {
         await lastValueFrom(this.stayService.update(stay.id, stay));
         this.getAll();
-        this.notificationService.showSuccess('Stay finished successfully!', 'Success');
+        this.notificationService.showSuccess('Stay finished successfully!','Success');
       } catch (error) {
         this.notificationService.showError(`Error finishing stay: ${error}`, 'Error');
       }
@@ -119,12 +95,12 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     }
   }
 
-
   async delete(id: number) {
     try {
       await lastValueFrom(this.stayService.delete(id));
       this.getAll();
-      this.notificationService.showSuccess('Stay deleted successfully!', 'Success');
+      this.notificationService.showSuccess(
+        'Stay deleted successfully!', 'Success');
     } catch (error) {
       this.notificationService.showError(`Error deleting stay: ${error}`, 'Error');
     }
@@ -132,7 +108,9 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
 
   async onGeneratePdf(stay: Stay) {
     try {
-      const pdfBlob: Blob = await lastValueFrom(this.stayService.generatePdf(stay.id));
+      const pdfBlob: Blob = await lastValueFrom(
+        this.stayService.generatePdf(stay.id)
+      );
       const url = window.URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
@@ -144,25 +122,13 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     }
   }
 
-  updateCustomerVehicleOptions() {
-    this.customerVehicleOptions = this.customers.flatMap(customer =>
-      this.vehicles.map(vehicle => ({customer, vehicle,
-        display: `${customer.name} - ${vehicle.brand} - ${vehicle.model}`
-      }))
-    );
-  }
-
-  onCustomerVehicleChange(selectedOption: { customer: Customer; vehicle: Vehicle }) {
-    this.selectedOption = selectedOption;
-    this.stay.customerVehicleId = selectedOption.customer.id;
-    this.stay.customerVehicleId = selectedOption.vehicle.id;
-  }
-
   searchStays() {
     if (this.searchTerm.trim() !== '') {
       this.filteredStays = this.stays.filter(
         (stay: Stay) =>
-          stay.licensePlate.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          stay.licensePlate
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
           stay.stayStatus.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
