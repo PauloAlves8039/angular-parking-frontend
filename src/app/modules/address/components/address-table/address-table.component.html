@@ -10,12 +10,19 @@
         </button>
       </div>
       <div class="ms-2">
-        <button type="button" class="btn button-info button-search mb-3" title="Add" (click)="openCreateModal()">
+        <button type="button" class="btn button-info button-search mb-3" title="Add" (click)="openModal(modalIdAddress, false)">
           <i class="bi bi-plus-square-fill"></i> Add
         </button>
       </div>
     </div>
   </div>
+
+  <app-address-modal
+    [modalId]="modalIdAddress"
+    [addressUpdate]="address"
+    [isUpdateMode]="isUpdateMode"
+    (addressUpdated)="getAll()">
+  </app-address-modal>
 
   <div class="table-responsive">
     <table class="table table-bordered table-hover">
@@ -23,7 +30,7 @@
         <tr>
           <th>Street</th>
           <th>Number</th>
-          <th>complement</th>
+          <th>Complement</th>
           <th>Neighborhood</th>
           <th>State</th>
           <th>City</th>
@@ -58,106 +65,4 @@
     [totalPages]="totalPages"
     (changePage)="onPageChange($event)">
   </app-pagination>
-
-</div>
-
-<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addressModalLabel">
-          {{ isUpdateMode ? 'Update Address' : 'Add New Address' }}
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form  #addressForm="ngForm">
-          <div class="row g-3">
-            <div class="col-md-8">
-              <div class="d-flex">
-                <div class="md-2">
-                  <label for="search-zip-code" class="form-label"></label>
-                  <div class="input-group d-flex">
-                    <input type="text"
-                           id="search-zip-code"
-                           name="search-zip-code"
-                           class="form-control input-zip-code"
-                           maxlength="9"
-                           pattern="[0-9]{8}"
-                           placeholder="Add zip code"
-                           [(ngModel)]="address.zipCode"
-                           (ngModelChange)="address.zipCode"
-                           [value]="address.zipCode | zipcodeformat">
-                    <div class="ms-2 mb-3">
-                      <button type="button" class="btn button-info button-search" (click)="searchZipCode()" title="Search zip code">
-                        <i class="bi bi-search"></i> Search zip code
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="street" class="form-label">Street <span>*</span></label>
-                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="address.street" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="number" class="form-label">Number <span>*</span></label>
-                <input type="text" id="number" name="number" class="form-control input-form--sm-1" [(ngModel)]="address.number" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="complement" class="form-label">Complement</label>
-                <input type="text" id="complement" name="complement" class="form-control"
-                  [(ngModel)]="address.complement">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="neighborhood" class="form-label">Neighborhood <span>*</span></label>
-                <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="address.neighborhood" required>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="federativeUnit" class="form-label">State <span>*</span></label>
-                <select id="federativeUnit" name="federativeUnit" class="form-control small-select" [(ngModel)]="address.federativeUnit">
-                  <option *ngFor="let state of states" [value]="state.acronym">{{ state.acronym }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="city" class="form-label">City <span>*</span></label>
-                <input type="text" id="city" name="city" class="form-control" [(ngModel)]="address.city" required>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="zipCode" class="form-label">Zip Code <span>*</span></label>
-                <input type="text" id="zipCode" name="zipCode" class="form-control input-zip-code" [(ngModel)]="address.zipCode" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
-              <i class="bi bi-door-closed-fill"></i> Close
-            </button>
-            <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
-              <i class="bi bi-x-square"></i> Clear
-            </button>
-            <button type="button" class="btn button-success" title="Save" [disabled]="!validateFields()" (click)="saveOrUpdate()">
-              <i class="bi bi-floppy-fill"></i> Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
 </div>
