@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Vehicle } from '../../../../core/models/Vehicle';
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
-import { ModalService } from '../../../../shared/services/modal/modal.service';
-import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
-import { FormGroup } from '@angular/forms';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
@@ -12,37 +9,26 @@ import { NotificationService } from '../../../../shared/services/notification/no
   templateUrl: './vehicle-table.component.html',
   styleUrls: ['./vehicle-table.component.scss'],
 })
-export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
+export class VehicleTableComponent implements OnInit {
   vehicles: Vehicle[] = [];
   filteredVehicles: any[] = [];
   pagedVehicles: Vehicle[] = [];
   vehicle: Vehicle = new Vehicle();
   isUpdateMode: boolean = false;
-  timeValueModal: number = 200;
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
-  vehicleForm!: FormGroup;
 
-  private modalIdVehicle: string = 'vehicleModal';
+  public modalIdVehicle: string = 'vehicleModal';
 
   constructor(
     private vehicleService: VehicleService,
-    private modalService: ModalService,
     private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
     this.getAll();
-  }
-
-  saveOrUpdate() {
-    if (this.isUpdateMode) {
-      this.update();
-    } else {
-      this.save();
-    }
   }
 
   async getAll() {
@@ -53,36 +39,6 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
       this.updatePagination();
     } catch (error) {
       this.notificationService.showError(`Error loading all vehicles: ${error}`, 'Error');
-    }
-  }
-
-  async save() {
-    try {
-      if (this.validateFields()) {
-        await lastValueFrom(this.vehicleService.create(this.vehicle));
-        this.getAll();
-        this.resetModal();
-        this.notificationService.showSuccess('Vehicle added successfully!', 'Success');
-      } else {
-        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
-      }
-    } catch (error) {
-      this.notificationService.showError(`Error adding vehicle: ${error}`, 'Error');
-    }
-  }
-
-  async update() {
-    try {
-      if (this.validateFields()) {
-        await lastValueFrom(this.vehicleService.update(this.vehicle.id, this.vehicle));
-        this.getAll();
-        this.resetModal();
-        this.notificationService.showSuccess('Vehicle updated successfully!', 'Success');
-      } else {
-        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
-      }
-    } catch (error) {
-      this.notificationService.showError(`Error updating vehicle: ${error}`, 'Error');
     }
   }
 
@@ -121,40 +77,26 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
   }
 
   onUpdate(vehicle: Vehicle) {
-    this.isUpdateMode = true;
     this.vehicle = { ...vehicle };
-    this.openModal();
+    this.openModal(this.modalIdVehicle, true);
   }
 
   onDelete(vehicle: Vehicle) {
-    if (
-      confirm(`Do you really want to delete the vehicle ${vehicle.brand}?`)
-    ) {
+    if (confirm(`Do you really want to delete the vehicle ${vehicle.brand}?`)) {
       this.delete(vehicle.id);
     }
   }
 
-  openCreateModal() {
-    this.isUpdateMode = false;
-    this.vehicle = new Vehicle();
-    this.openModal();
-  }
-
-  openModal() {
-    this.modalService.openModal(this.modalIdVehicle);
-  }
-
-  closeModal() {
-    this.modalService.closeModal(this.modalIdVehicle);
-  }
-
-  resetModal() {
-    this.modalService.resetModal<Vehicle>(
-      this.modalIdVehicle,
-      this.vehicle,
-      () => new Vehicle(),
-      this.timeValueModal
-    );
+  openModal(modalId: string, isUpdateMode: boolean = false) {
+    this.isUpdateMode = isUpdateMode;
+    if (!isUpdateMode) {
+      this.vehicle = new Vehicle();
+    }
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modalInstance.show();
+    }
   }
 
   updatePagination() {
@@ -171,13 +113,4 @@ export class VehicleTableComponent implements OnInit, BaseComponent<Vehicle> {
     this.updatePagination();
   }
 
-  validateFields(): boolean {
-    return (
-      !!this.vehicle.vehicleType &&
-      !!this.vehicle.brand &&
-      !!this.vehicle.model &&
-      !!this.vehicle.color &&
-      !!this.vehicle.vehicleYear
-    );
-  }
 }
