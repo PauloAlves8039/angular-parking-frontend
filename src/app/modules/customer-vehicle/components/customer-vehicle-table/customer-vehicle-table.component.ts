@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CustomerVehicle } from '../../../../core/models/CustomerVehicle';
 import { CustomerVehicleService } from '../../../../core/services/customer-vehicle/CustomerVehicle.service';
-import { ModalService } from '../../../../shared/services/modal/modal.service';
-import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
 import { Customer } from '../../../../core/models/Customer';
 import { Vehicle } from '../../../../core/models/Vehicle';
 import { CustomerService } from '../../../../core/services/customer/Customer.service';
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
-import { FormGroup } from '@angular/forms';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
@@ -16,7 +13,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
   templateUrl: './customer-vehicle-table.component.html',
   styleUrls: ['./customer-vehicle-table.component.scss'],
 })
-export class CustomerVehicleTableComponent implements OnInit, BaseComponent<CustomerVehicle> {
+export class CustomerVehicleTableComponent implements OnInit {
   customersVehicles: CustomerVehicle[] = [];
   customers: Customer[] = [];
   vehicles: Vehicle[] = [];
@@ -24,18 +21,15 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
   pagedCustomersVehicles: CustomerVehicle[] = [];
   customerVehicle: CustomerVehicle = new CustomerVehicle();
   isUpdateMode: boolean = false;
-  timeValueModal: number = 200;
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
-  customerVehicleForm!: FormGroup;
 
-  private modalIdcustomerVehicle: string = 'customerVehicleModal';
+  public modalIdcustomerVehicle: string = 'customerVehicleModal';
 
   constructor(
     private customerVehicleService: CustomerVehicleService,
-    private modalService: ModalService,
     private customerService: CustomerService,
     private vehicleService: VehicleService,
     private notificationService: NotificationService
@@ -46,13 +40,6 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     this.getCustomersAndVehicles();
   }
 
-  saveOrUpdate() {
-    if (this.isUpdateMode) {
-      this.update();
-    } else {
-      this.save();
-    }
-  }
 
   async getAll() {
     try {
@@ -62,36 +49,6 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
       this.updatePagination();
     } catch (error) {
       this.notificationService.showError(`Error loading all customers and associated vehicles: ${error}`, 'Error');
-    }
-  }
-
-  async save() {
-    try {
-      if (this.validateFields()) {
-        await lastValueFrom(this.customerVehicleService.create(this.customerVehicle));
-        this.getAll();
-        this.resetModal();
-        this.notificationService.showSuccess('Association added successfully!', 'Success');
-      } else {
-        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
-      }
-    } catch (error) {
-      this.notificationService.showError(`Error adding association: ${error}`, 'Error');
-    }
-  }
-
-  async update() {
-    try {
-      if (this.validateFields()) {
-        await lastValueFrom(this.customerVehicleService.update(this.customerVehicle.id, this.customerVehicle));
-        this.getAll();
-        this.resetModal();
-        this.notificationService.showSuccess('Association updated successfully!', 'Success');
-      } else {
-        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
-      }
-    } catch (error) {
-      this.notificationService.showError(`Error updating association: ${error}`, 'Error');
     }
   }
 
@@ -116,7 +73,6 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
 
   searchCustomerVehicle() {
     const searchTermLower = this.searchTerm.trim().toLowerCase();
-
     if (searchTermLower) {
       this.filteredCustomerVehicle = this.customersVehicles.filter((customerVehicle: CustomerVehicle) => {
         const customerName = this.getCustomerName(customerVehicle.customerId).toLowerCase();
@@ -136,16 +92,9 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     this.getAll();
   }
 
-  clearModalFields(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.customerVehicle = new CustomerVehicle();
-  }
-
   onUpdate(customerVehicle: CustomerVehicle) {
-    this.isUpdateMode = true;
     this.customerVehicle = { ...customerVehicle };
-    this.openModal();
+    this.openModal(this.modalIdcustomerVehicle, true);
   }
 
   onDelete(customerVehicle: CustomerVehicle) {
@@ -154,27 +103,16 @@ export class CustomerVehicleTableComponent implements OnInit, BaseComponent<Cust
     }
   }
 
-  openCreateModal() {
-    this.isUpdateMode = false;
-    this.customerVehicle = new CustomerVehicle();
-    this.openModal();
-  }
-
-  openModal() {
-    this.modalService.openModal(this.modalIdcustomerVehicle);
-  }
-
-  closeModal() {
-    this.modalService.closeModal(this.modalIdcustomerVehicle);
-  }
-
-  resetModal() {
-    this.modalService.resetModal<CustomerVehicle>(
-      this.modalIdcustomerVehicle,
-      this.customerVehicle,
-      () => new CustomerVehicle(),
-      this.timeValueModal
-    );
+  openModal(modalId: string, isUpdateMode: boolean = false) {
+    this.isUpdateMode = isUpdateMode;
+    if (!isUpdateMode) {
+      this.customerVehicle = new CustomerVehicle();
+    }
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modalInstance.show();
+    }
   }
 
   getCustomerName(customerId: number): string {

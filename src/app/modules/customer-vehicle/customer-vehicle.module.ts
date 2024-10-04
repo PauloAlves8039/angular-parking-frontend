@@ -7,9 +7,14 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
+import { CustomerVehicleModalComponent } from './components/customer-vehicle-modal/customer-vehicle-modal.component';
 
 @NgModule({
-  declarations: [CustomerVehicleTableComponent, CustomerVehicleHomeComponent],
+  declarations: [
+    CustomerVehicleTableComponent,
+    CustomerVehicleHomeComponent,
+    CustomerVehicleModalComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,7 +23,8 @@ import { SharedModule } from '../../shared/shared.module';
     RouterModule.forChild(CUSTOMER_VEHICLE_ROUTES)
   ],
   exports: [
-    CustomerVehicleTableComponent
+    CustomerVehicleTableComponent,
+    CustomerVehicleModalComponent
   ]
 })
 export class CustomerVehicleModule { }
