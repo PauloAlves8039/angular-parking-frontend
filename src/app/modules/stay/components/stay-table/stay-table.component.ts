@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Stay } from '../../../../core/models/Stay';
 import { StayService } from '../../../../core/services/stay/Stay.service';
-import { ModalService } from '../../../../shared/services/modal/modal.service';
-import { BaseComponent } from '../../../../core/interfaces/base-component/ibase-component';
 import { lastValueFrom } from 'rxjs';
-import { FormGroup } from '@angular/forms';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
@@ -12,25 +9,22 @@ import { NotificationService } from '../../../../shared/services/notification/no
   templateUrl: './stay-table.component.html',
   styleUrls: ['./stay-table.component.scss'],
 })
-export class StayTableComponent implements OnInit, BaseComponent<Stay> {
+export class StayTableComponent implements OnInit {
   stays: Stay[] = [];
   filteredStays: Stay[] = [];
   pagedStays: Stay[] = [];
   stay: Stay = new Stay();
   isUpdateMode: boolean = false;
-  timeValueModal: number = 200;
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 1;
-  stayForm!: FormGroup;
   customerVehicleDetails: any[] = [];
 
-  private modalIdStay: string = 'stayModal';
+  public modalIdStay: string = 'stayModal';
 
   constructor(
     private stayService: StayService,
-    private modalService: ModalService,
     private notificationService: NotificationService
   ) {}
 
@@ -62,21 +56,6 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   getCustomerVehicle(stay: Stay) {
     const customerVehicle = this.customerVehicleDetails.find(cv => cv.id === stay.customerVehicleId);
     return customerVehicle ? `${customerVehicle.customerName} - ${customerVehicle.vehicleBrand}` : 'N/A';
-  }
-
-  async save() {
-    try {
-      if (this.validateFields()) {
-        await lastValueFrom(this.stayService.create(this.stay));
-        this.getAll();
-        this.resetModal();
-        this.notificationService.showSuccess('Stay added successfully!','Success');
-      } else {
-        this.notificationService.showWarning('Please fill in all required fields', 'Warning');
-      }
-    } catch (error) {
-      this.notificationService.showError(`Error adding stay: ${error}`, 'Error');
-    }
   }
 
   async update(stay: Stay) {
@@ -142,12 +121,6 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     this.getAll();
   }
 
-  clearModalFields(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.stay = new Stay();
-  }
-
   onUpdate(stay: Stay) {
     this.isUpdateMode = true;
     this.stay = { ...stay };
@@ -163,24 +136,19 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
   openCreateModal() {
     this.isUpdateMode = false;
     this.stay = new Stay();
-    this.openModal();
+    this.openModal(this.modalIdStay, true);
   }
 
-  openModal() {
-    this.modalService.openModal(this.modalIdStay);
-  }
-
-  closeModal() {
-    this.modalService.closeModal(this.modalIdStay);
-  }
-
-  resetModal() {
-    this.modalService.resetModal<Stay>(
-      this.modalIdStay,
-      this.stay,
-      () => new Stay(),
-      this.timeValueModal
-    );
+  openModal(modalId: string, isUpdateMode: boolean = false) {
+    this.isUpdateMode = isUpdateMode;
+    if (!isUpdateMode) {
+      this.stay = new Stay();
+    }
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(modalElement);
+      modalInstance.show();
+    }
   }
 
   updatePagination() {
@@ -195,14 +163,5 @@ export class StayTableComponent implements OnInit, BaseComponent<Stay> {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.updatePagination();
-  }
-
-  validateFields(): boolean {
-    return (
-      !!this.stay.customerVehicleId &&
-      !!this.stay.licensePlate &&
-      !!this.stay.entryDate &&
-      !!this.stay.hourlyRate
-    );
   }
 }

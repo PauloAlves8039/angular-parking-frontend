@@ -1,0 +1,61 @@
+<div class="modal fade" id="stayModal" tabindex="-1" aria-labelledby="stayModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stayModalLabel">
+          Add New Stay
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #stayForm="ngForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="customerVehicleSelect" class="form-label">Select Customer Vehicle:</label>
+                <select id="customerVehicleSelect" [(ngModel)]="stay.customerVehicleId" name="customerVehicle" class="form-control">
+                  <option *ngFor="let vehicle of customerVehicleDetails" [value]="vehicle.id">
+                    {{ vehicle.customerName }} - {{ vehicle.vehicleBrand }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="licensePlate" class="form-label">License Plate <span>*</span></label>
+                <input type="text" id="licensePlate" name="licensePlate" class="form-control" [(ngModel)]="stay.licensePlate">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="entryDate" class="form-label">Entry Date <span>*</span></label>
+                <input type="datetime-local" id="entryDate" name="entryDate" class="form-control" [(ngModel)]="stay.entryDate">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="hourlyRate" class="form-label">Hourly Rate</label>
+                <select id="hourlyRate" name="hourlyRate" class="form-control" [(ngModel)]="stay.hourlyRate">
+                  <option value="3.00">R$ 3,00</option>
+                  <option value="4.00">R$ 4,00</option>
+                  <option value="5.00">R$ 5,00</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn button-cancel" data-bs-dismiss="modal" title="Close">
+              <i class="bi bi-door-closed-fill"></i> Close
+            </button>
+            <button type="button" class="btn button-danger" title="Clear Fields" (click)="clearModalFields($event)">
+              <i class="bi bi-x-square"></i> Clear
+            </button>
+            <button type="button" class="btn button-success" title="Save" [disabled]="!validateFields()" (click)="save()">
+              <i class="bi bi-floppy-fill"></i> Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
