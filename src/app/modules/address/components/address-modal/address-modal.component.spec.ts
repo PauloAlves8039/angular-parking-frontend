@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { BaseTableComponent } from './base-table.component';
+import { AddressModalComponent } from './address-modal.component';
 
-describe('BaseTableComponent', () => {
-  let component: BaseTableComponent;
-  let fixture: ComponentFixture<BaseTableComponent>;
+describe('AddressModalComponent', () => {
+  let component: AddressModalComponent;
+  let fixture: ComponentFixture<AddressModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BaseTableComponent ]
+      declarations: [ AddressModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BaseTableComponent);
+    fixture = TestBed.createComponent(AddressModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

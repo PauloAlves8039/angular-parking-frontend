@@ -7,11 +7,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { CUSTOMER_ROUTES } from './customer.routing';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
+import { CustomerModalComponent } from './components/customer-modal/customer-modal.component';
 
 @NgModule({
   declarations: [
     CustomerTableComponent,
-    CustomerHomeComponent
+    CustomerHomeComponent,
+    CustomerModalComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { SharedModule } from '../../shared/shared.module';
     RouterModule.forChild(CUSTOMER_ROUTES)
   ],
   exports: [
-    CustomerTableComponent
+    CustomerTableComponent,
+    CustomerModalComponent
   ]
 })
 export class CustomerModule { }

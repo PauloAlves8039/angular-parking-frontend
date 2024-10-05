@@ -7,9 +7,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { StayTableComponent } from './components/stay-table/stay-table.component';
 import { StayHomeComponent } from './pages/stay-home/stay-home.component';
+import { StayModalComponent } from './components/stay-modal/stay-modal.component';
 
 @NgModule({
-  declarations: [StayTableComponent, StayHomeComponent],
+  declarations: [
+    StayTableComponent,
+    StayHomeComponent,
+    StayModalComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,7 +23,8 @@ import { StayHomeComponent } from './pages/stay-home/stay-home.component';
     RouterModule.forChild(STAY_ROUTES)
   ],
   exports: [
-    StayTableComponent
+    StayTableComponent,
+    StayModalComponent
   ]
 })
 export class StayModule { }

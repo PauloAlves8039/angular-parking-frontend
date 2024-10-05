@@ -7,9 +7,14 @@ import { VehicleTableComponent } from './components/vehicle-table/vehicle-table.
 import { VehicleHomeComponent } from './pages/vehicle-home/vehicle-home.component';
 import { VEHICLE_ROUTES } from './vehicle.routing';
 import { RouterModule } from '@angular/router';
+import { VechicleModalComponent } from './components/vechicle-modal/vechicle-modal.component';
 
 @NgModule({
-  declarations: [VehicleTableComponent, VehicleHomeComponent],
+  declarations: [
+    VehicleTableComponent,
+    VehicleHomeComponent,
+    VechicleModalComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,7 +23,8 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild(VEHICLE_ROUTES)
   ],
   exports: [
-    VehicleTableComponent
+    VehicleTableComponent,
+    VechicleModalComponent
   ]
 })
 export class VehicleModule { }

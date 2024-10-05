@@ -7,9 +7,14 @@ import { RouterModule } from '@angular/router';
 import { ADDRESS_ROUTES } from './address.routing';
 import { SharedModule } from '../../shared/shared.module';
 import { AddressHomeComponent } from './pages/address-home/address-home.component';
+import { AddressModalComponent } from './components/address-modal/address-modal.component';
 
 @NgModule({
-  declarations: [AddressTableComponent, AddressHomeComponent],
+  declarations: [
+    AddressTableComponent,
+    AddressHomeComponent,
+    AddressModalComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,7 +23,8 @@ import { AddressHomeComponent } from './pages/address-home/address-home.componen
     RouterModule.forChild(ADDRESS_ROUTES)
   ],
   exports: [
-    AddressTableComponent
+    AddressTableComponent,
+    AddressModalComponent
   ]
 })
 export class AddressModule { }

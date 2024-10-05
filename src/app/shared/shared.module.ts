@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoadingComponent } from './components/loading/loading.component';
-import { BaseTableComponent } from './components/base-table/base-table.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { RealPipe } from './pipes/currencies/real/real.pipe';
 import { CpfmaskPipe } from './pipes/input-format/cpf/cpfmask.pipe';
@@ -19,7 +18,6 @@ import { PhoneformatPipe } from './pipes/input-format/phone/phoneformat.pipe';
     NavbarComponent,
     FooterComponent,
     LoadingComponent,
-    BaseTableComponent,
     PaginationComponent,
     RealPipe,
     DateformatPipe,
@@ -37,7 +35,6 @@ import { PhoneformatPipe } from './pipes/input-format/phone/phoneformat.pipe';
     NavbarComponent,
     FooterComponent,
     LoadingComponent,
-    BaseTableComponent,
     PaginationComponent,
     RealPipe,
     DateformatPipe,
