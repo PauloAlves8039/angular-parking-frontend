@@ -141,11 +141,4 @@ export class CustomerVehicleTableComponent implements OnInit {
     this.currentPage = page;
     this.updatePagination();
   }
-
-  validateFields(): boolean {
-    return (
-      !!this.customerVehicle.customerId &&
-      !!this.customerVehicle.vehicleId
-    );
-  }
 }
