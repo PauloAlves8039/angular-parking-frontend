@@ -3,6 +3,7 @@ import { Stay } from '../../../../core/models/Stay';
 import { StayService } from '../../../../core/services/stay/Stay.service';
 import { lastValueFrom } from 'rxjs';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-stay-table',
@@ -59,13 +60,20 @@ export class StayTableComponent implements OnInit {
   }
 
   async update(stay: Stay) {
-    const confirmFinish = window.confirm('Are you sure you want to finish this stay?');
+    const { isConfirmed } = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to finish this stay.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, finish it!',
+      cancelButtonText: 'No, cancel',
+    });
 
-    if (confirmFinish) {
+    if (isConfirmed) {
       try {
         await lastValueFrom(this.stayService.update(stay.id, stay));
         this.getAll();
-        this.notificationService.showSuccess('Stay finished successfully!','Success');
+        this.notificationService.showSuccess('Stay finished successfully!', 'Success');
       } catch (error) {
         this.notificationService.showError(`Error finishing stay: ${error}`, 'Error');
       }
@@ -127,9 +135,26 @@ export class StayTableComponent implements OnInit {
     this.update(stay);
   }
 
-  onDelete(stay: Stay) {
-    if (confirm(`Do you really want to exclude stay ${stay.licensePlate}?`)) {
-      this.delete(stay.id);
+  async onDelete(stay: Stay) {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete stay with license plate ${stay.licensePlate}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    });
+
+    if (isConfirmed) {
+      try {
+        await lastValueFrom(this.stayService.delete(stay.id));
+        this.getAll();
+        this.notificationService.showSuccess('Stay deleted successfully!', 'Success');
+      } catch (error) {
+        this.notificationService.showError(`Error deleting stay: ${error}`, 'Error');
+      }
+    } else {
+      this.notificationService.showInfo('Stay was not deleted.', 'Cancelled');
     }
   }
 

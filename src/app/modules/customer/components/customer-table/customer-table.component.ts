@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { AddressService } from '../../../../core/services/address/Address.service';
 import { Address } from '../../../../core/models/Address';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-customer-table',
@@ -57,14 +58,12 @@ export class CustomerTableComponent implements OnInit {
   }
 
   async delete(id: number) {
-    if (confirm(`Do you really want to delete the customer?`)) {
-      try {
-        await lastValueFrom(this.customerService.delete(id));
-        this.getAll();
-        this.notificationService.showSuccess('Customer deleted successfully!', 'Success');
-      } catch (error) {
-        this.notificationService.showError(`Error deleting customer: ${error}`, 'Error');
-      }
+    try {
+      await lastValueFrom(this.customerService.delete(id));
+      this.getAll();
+      this.notificationService.showSuccess('Customer deleted successfully!', 'Success');
+    } catch (error) {
+      this.notificationService.showError(`Error deleting customer: ${error}`, 'Error');
     }
   }
 
@@ -98,10 +97,43 @@ export class CustomerTableComponent implements OnInit {
   }
 
   onDelete(customer: Customer) {
-    if (confirm(`Do you really want to delete the customer ${customer.name}?`)) {
-      this.delete(customer.id);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete the customer ${customer.name}? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00BFFF',
+      cancelButtonColor: '#FF4500',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const linkedAddress = this.getAddressById(customer.addressId);
+
+        if (linkedAddress) {
+          Swal.fire({
+            title: 'This customer is linked to an address',
+            text: `Customer ${customer.name} is associated with the address at ${linkedAddress.street}. Do you also want to remove this association?`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#00BFFF',
+            cancelButtonColor: '#FF4500',
+            confirmButtonText: 'Yes, proceed!',
+            cancelButtonText: 'No, keep the address',
+          }).then((secondResult) => {
+            if (secondResult.isConfirmed) {
+              this.delete(customer.id);
+              Swal.fire('Deleted!', 'The customer and associated address have been handled.', 'success');
+            }
+          });
+        } else {
+          this.delete(customer.id);
+          Swal.fire('Deleted!', 'The customer has been deleted.', 'success');
+        }
+      }
+    });
   }
+
 
   openModal(modalId: string, isUpdateMode: boolean = false) {
     this.isUpdateMode = isUpdateMode;

@@ -7,6 +7,7 @@ import { Vehicle } from '../../../../core/models/Vehicle';
 import { CustomerService } from '../../../../core/services/customer/Customer.service';
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-customer-vehicle-table',
@@ -98,9 +99,21 @@ export class CustomerVehicleTableComponent implements OnInit {
   }
 
   onDelete(customerVehicle: CustomerVehicle) {
-    if (confirm(`Do you really want to delete the customer and associated vehicle?`)) {
-      this.delete(customerVehicle.id);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete the customer ${this.getCustomerName(customerVehicle.customerId)} and the associated vehicle ${this.getVehicleModel(customerVehicle.vehicleId)}? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00BFFF',
+      cancelButtonColor: '#FF4500',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.delete(customerVehicle.id);
+        Swal.fire('Deleted!', 'The customer-vehicle association has been deleted.', 'success');
+      }
+    });
   }
 
   openModal(modalId: string, isUpdateMode: boolean = false) {

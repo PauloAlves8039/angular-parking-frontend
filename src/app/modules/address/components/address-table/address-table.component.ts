@@ -3,6 +3,7 @@ import { Address } from '../../../../core/models/Address';
 import { AddressService } from '../../../../core/services/address/Address.service';
 import { lastValueFrom } from 'rxjs';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-address-table',
@@ -83,9 +84,21 @@ export class AddressTableComponent implements OnInit {
   }
 
   onDelete(address: Address) {
-    if (confirm(`Do you really want to delete the address ${address.street}?`)) {
-      this.delete(address.id);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete the address ${address.street}? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00BFFF',
+      cancelButtonColor: '#FF4500',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.delete(address.id);
+        Swal.fire('Deleted!', 'The address has been deleted.', 'success');
+      }
+    });
   }
 
   clearSearchField() {
