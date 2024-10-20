@@ -16,10 +16,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.updateAuthenticationStatus();
     this.addSidebarToggleEvent();
-
-    if (this.isAuthenticated) {
-      this.userEmail = this.authService.getEmailFromToken();
-    }
+    
+    this.authService.loggedInUser$.subscribe(email => {
+      this.userEmail = email;
+    });
 
     this.router.events.subscribe(() => {
       this.updateAuthenticationStatus();
@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
   logOut() {
     this.authService.logout();
     this.router.navigate(['/login']);
-    window.location.reload();
+    this.userEmail = null;
   }
 
 }
