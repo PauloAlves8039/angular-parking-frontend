@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="vehicleType" class="form-label">Type <span>*</span></label>
-                <select id="vehicleType" name="vehicleType" class="form-select" [(ngModel)]="vehicle.vehicleType" required>
+                <select id="vehicleType" name="vehicleType" class="form-select" required [(ngModel)]="vehicle.vehicleType">
                   <option value="" disabled>Select type</option>
                   <option value="Carro">Carro</option>
                   <option value="Moto">Moto</option>
@@ -23,19 +23,37 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="brand" class="form-label">Brand <span>*</span></label>
-                <input type="text" id="brand" name="brand" class="form-control" [(ngModel)]="vehicle.brand" required>
+                <input type="text"
+                       id="brand"
+                       name="brand"
+                       maxlength="50"
+                       class="form-control"
+                       required
+                       [(ngModel)]="vehicle.brand">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="model" class="form-label">Model <span>*</span></label>
-                <input type="text" id="model" name="model" class="form-control" [(ngModel)]="vehicle.model" required>
+                <input type="text"
+                       id="model"
+                       name="model"
+                       maxlength="50"
+                       class="form-control"
+                       required
+                       [(ngModel)]="vehicle.model">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="color" class="form-label">Color <span>*</span></label>
-                <input type="text" id="color" name="color" class="form-control" [(ngModel)]="vehicle.color" required>
+                <input type="text"
+                       id="color"
+                       name="color"
+                       maxlength="50"
+                       class="form-control"
+                       required
+                       [(ngModel)]="vehicle.color">
               </div>
             </div>
             <div class="col-md-6">
@@ -45,16 +63,21 @@
                        id="vehicleYear"
                        name="vehicleYear"
                        class="form-control input-year"
+                       required
                        [(ngModel)]="vehicle.vehicleYear"
                        max="9999"
-                       oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);"
-                       required>
+                       oninput="if(this.value.length > 4) this.value = this.value.slice(0, 4);">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="notes" class="form-label">Notes</label>
-                <input type="text" id="notes" name="notes" class="form-control" [(ngModel)]="vehicle.notes">
+                <input type="text"
+                       id="notes"
+                       name="notes"
+                       maxlength="100"
+                       class="form-control"
+                       [(ngModel)]="vehicle.notes">
               </div>
             </div>
           </div>

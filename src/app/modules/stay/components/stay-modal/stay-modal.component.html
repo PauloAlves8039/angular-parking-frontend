@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="customerVehicleSelect" class="form-label">Select Customer Vehicle:</label>
-                <select id="customerVehicleSelect" [(ngModel)]="stay.customerVehicleId" name="customerVehicle" class="form-control">
+                <select id="customerVehicleSelect" name="customerVehicle" class="form-control" required [(ngModel)]="stay.customerVehicleId" >
                   <option *ngFor="let vehicle of customerVehicleDetails" [value]="vehicle.id">
                     {{ vehicle.customerName }} - {{ vehicle.vehicleBrand }}
                   </option>
@@ -23,19 +23,25 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="licensePlate" class="form-label">License Plate <span>*</span></label>
-                <input type="text" id="licensePlate" name="licensePlate" class="form-control" [(ngModel)]="stay.licensePlate">
+                <input type="text"
+                       id="licensePlate"
+                       name="licensePlate"
+                       maxlength="10"
+                       class="form-control"
+                       required
+                       [(ngModel)]="stay.licensePlate">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="entryDate" class="form-label">Entry Date <span>*</span></label>
-                <input type="datetime-local" id="entryDate" name="entryDate" class="form-control" [(ngModel)]="stay.entryDate">
+                <input type="datetime-local" id="entryDate" name="entryDate" class="form-control" required [(ngModel)]="stay.entryDate">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="hourlyRate" class="form-label">Hourly Rate</label>
-                <select id="hourlyRate" name="hourlyRate" class="form-control" [(ngModel)]="stay.hourlyRate">
+                <select id="hourlyRate" name="hourlyRate" class="form-control" required [(ngModel)]="stay.hourlyRate">
                   <option value="3.00">R$ 3,00</option>
                   <option value="4.00">R$ 4,00</option>
                   <option value="5.00">R$ 5,00</option>

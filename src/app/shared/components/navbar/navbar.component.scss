@@ -91,9 +91,11 @@ a[aria-expanded="true"] {
 }
 
 #sidebarCollapse {
+  display: flex;
   width: 40px;
   height: 40px;
-  margin-left: 5%;
+  margin-left: 3%;
+  margin-top: -20px;
   cursor: pointer;
 }
 
