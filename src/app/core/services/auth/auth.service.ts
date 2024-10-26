@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +9,25 @@ export class AuthService {
   private apiUrl = 'https://localhost:7199/api/User/login';
   private apiRegisterUrl = 'https://localhost:7199/api/User/register';
 
-  constructor(private http: HttpClient) {}
+  private loggedInUserSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  public loggedInUser$: Observable<string | null> = this.loggedInUserSubject.asObservable();
+
+
+  constructor(private http: HttpClient) {
+    const email = this.getEmailFromToken();
+    if (email) {
+      this.loggedInUserSubject.next(email);
+    }
+  }
 
   login(credentials: any): Observable<any> {
     return this.http.post(this.apiUrl, credentials).pipe(
       tap((response: any) => {
         localStorage.setItem('token', response.token);
+        const email = this.getEmailFromToken();
+        if (email) {
+          this.loggedInUserSubject.next(email);
+        }
       })
     );
   }
@@ -25,6 +38,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.loggedInUserSubject.next(null);
   }
 
   getToken(): string | null {

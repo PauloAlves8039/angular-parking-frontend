@@ -21,7 +21,7 @@ export class AuthComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
-  
+
   onSubmit() {
     this.authService
       .login({ email: this.email, password: this.password })
@@ -32,10 +32,7 @@ export class AuthComponent implements OnInit {
         },
         error: (error) => this.notificationService.showError(`Login failed: ${error}`, 'Check your email or password'),
       });
-
-    this.authHelper.reloadAuth();
   }
-
 
   goToRegister() {
     this.router.navigate(['/auth/register']);

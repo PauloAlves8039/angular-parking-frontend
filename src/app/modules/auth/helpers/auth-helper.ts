@@ -21,11 +21,4 @@ export class AuthHelper {
 
     return emailAndPasswordValid;
   }
-
-  reloadAuth() {
-    setTimeout(() => {
-      window.location.reload();
-    }, this.timeValue);
-  }
-
 }

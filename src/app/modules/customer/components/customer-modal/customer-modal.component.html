@@ -1,4 +1,4 @@
-<div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
+<div class="modal fade animation-bounce-in-1s" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -10,31 +10,50 @@
       <div class="modal-body">
         <form #customerForm="ngForm">
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="mb-3">
                 <label for="name" class="form-label">Name <span>*</span></label>
-                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="customer.name" required>
+                <input type="text"
+                      id="name"
+                      name="name"
+                      maxlength="100"
+                      class="form-control"
+                      [(ngModel)]="customer.name"
+                      required>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="mb-3">
                 <label for="birthDate" class="form-label">Birth Date <span>*</span></label>
-                <input type="date" id="birthDate" name="birthDate" class="form-control" [(ngModel)]="customer.birthDate" required>
+                <input type="date"
+                       id="birthDate"
+                       name="birthDate"
+                       class="form-control"
+                       [(ngModel)]="customer.birthDate"
+                       required>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="mb-3">
                 <label for="cpf" class="form-label">CPF <span>*</span></label>
-                <input type="text" id="cpf" name="cpf" class="form-control" [(ngModel)]="customer.cpf" [value]="customer.cpf | cpfmask" required>
+                <input type="text"
+                       id="cpf"
+                       name="cpf"
+                       maxlength="11"
+                       class="form-control"
+                       [(ngModel)]="customer.cpf"
+                       [value]="customer.cpf | cpfmask"
+                       required>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="mb-3">
                 <label for="phone" class="form-label">Phone <span>*</span></label>
                 <input type="text"
                        id="phone"
                        name="phone"
                        class="form-control"
+                       maxlength="11"
                        [(ngModel)]="customer.phone"
                        [value]="customer.phone | phoneformat"
                        required>
@@ -43,7 +62,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="email" class="form-label">Email <span>*</span></label>
-                <input type="email" id="email" name="email" class="form-control" [(ngModel)]="customer.email" required>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       class="form-control"
+                       maxlength="100"
+                       [(ngModel)]="customer.email"
+                       required>
               </div>
             </div>
             <div class="col-md-6">

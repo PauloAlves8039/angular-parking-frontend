@@ -1,4 +1,4 @@
-<div class="modal fade" id="customerVehicleModal" tabindex="-1" aria-labelledby="customerVehicleModalLabel" aria-hidden="true">
+<div class="modal fade animation-bounce-in-1s" id="customerVehicleModal" tabindex="-1" aria-labelledby="customerVehicleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="customerId" class="form-label">Customer <span>*</span></label>
-                <select id="customerId" name="customerId" class="form-control" [(ngModel)]="customerVehicle.customerId">
+                <select id="customerId" name="customerId" class="form-control" required [(ngModel)]="customerVehicle.customerId">
                   <option value="" disabled selected>Select Customer</option>
                   <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
                 </select>
@@ -22,7 +22,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="vehicleId" class="form-label">Vehicle <span>*</span></label>
-                <select id="vehicleId" name="vehicleId" class="form-control" [(ngModel)]="customerVehicle.vehicleId">
+                <select id="vehicleId" name="vehicleId" class="form-control" required [(ngModel)]="customerVehicle.vehicleId">
                   <option value="" disabled selected>Select Vehicle</option>
                   <option *ngFor="let vehicle of vehicles" [value]="vehicle.id">{{ vehicle.model }}</option>
                 </select>

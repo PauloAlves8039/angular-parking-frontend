@@ -1,4 +1,4 @@
-<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+<div class="modal fade animation-bounce-in-1s" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -35,48 +35,83 @@
               </div>
             </div>
             <hr>
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="mb-3">
                 <label for="street" class="form-label">Street <span>*</span></label>
-                <input type="text" id="street" name="street" class="form-control" [(ngModel)]="address.street" required>
+                <input type="text"
+                       id="street"
+                       name="street"
+                       maxlength="100"
+                       class="form-control"
+                       required
+                       [(ngModel)]="address.street">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="number" class="form-label">Number <span>*</span></label>
-                <input type="text" id="number" name="number" class="form-control input-form--sm-1" [(ngModel)]="address.number" required>
+                <input type="text"
+                       id="number"
+                       name="number"
+                       maxlength="100"
+                       class="form-control input-form--sm-1"
+                       required
+                       [(ngModel)]="address.number" >
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="complement" class="form-label">Complement</label>
-                <input type="text" id="complement" name="complement" class="form-control" [(ngModel)]="address.complement">
+                <input type="text"
+                       id="complement"
+                       name="complement"
+                       maxlength="100"
+                       class="form-control"
+                       [(ngModel)]="address.complement">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="neighborhood" class="form-label">Neighborhood <span>*</span></label>
-                <input type="text" id="neighborhood" name="neighborhood" class="form-control" [(ngModel)]="address.neighborhood" required>
+                <input type="text"
+                       id="neighborhood"
+                       name="neighborhood"
+                       maxlength="100"
+                       class="form-control"
+                       required
+                       [(ngModel)]="address.neighborhood">
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
                 <label for="federativeUnit" class="form-label">State <span>*</span></label>
-                <select id="federativeUnit" name="federativeUnit" class="form-control small-select" [(ngModel)]="address.federativeUnit">
+                <select id="federativeUnit" name="federativeUnit" class="form-control small-select" required [(ngModel)]="address.federativeUnit">
                   <option *ngFor="let state of states" [value]="state.acronym">{{ state.acronym }}</option>
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label for="city" class="form-label">City <span>*</span></label>
-                <input type="text" id="city" name="city" class="form-control" [(ngModel)]="address.city" required>
+                <input type="text"
+                       id="city"
+                       name="city"
+                       maxlength="100"
+                       class="form-control"
+                       required
+                       [(ngModel)]="address.city">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label for="zipCode" class="form-label">Zip Code <span>*</span></label>
-                <input type="text" id="zipCode" name="zipCode" class="form-control input-zip-code" [(ngModel)]="address.zipCode" required>
+                <input type="text"
+                       id="zipCode"
+                       name="zipCode"
+                       maxlength="9"
+                       class="form-control input-zip-code"
+                       required
+                       [(ngModel)]="address.zipCode">
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { Vehicle } from '../../../../core/models/Vehicle';
 import { VehicleService } from '../../../../core/services/vehicle/Vehicle.service';
 import { lastValueFrom } from 'rxjs';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-vehicle-table',
@@ -82,9 +83,21 @@ export class VehicleTableComponent implements OnInit {
   }
 
   onDelete(vehicle: Vehicle) {
-    if (confirm(`Do you really want to delete the vehicle ${vehicle.brand}?`)) {
-      this.delete(vehicle.id);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete the vehicle ${vehicle.brand}? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00BFFF',
+      cancelButtonColor: '#FF4500',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.delete(vehicle.id);
+        Swal.fire('Deleted!', 'The vehicle has been deleted.', 'success');
+      }
+    });
   }
 
   openModal(modalId: string, isUpdateMode: boolean = false) {
