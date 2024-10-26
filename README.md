@@ -32,10 +32,11 @@ That application is connected to the API: [Parking Backend](https://github.com/P
 - `Node v.20.11`
 - `Bootstrap v.5.0.2`
 - `Bootstrap Icons`
--  `Modular Architecture`
+- `Modular Architecture`
 - `API ViaCEP`
 - `JWT`
 - `Image Canva`
+- `Animate.css`
 
 ## :floppy_disk: Clone Repository
 
@@ -48,9 +49,10 @@ git clone https://github.com/PauloAlves8039/angular-parking-frontend.git
 <p align="center"> <img src="https://github.com/PauloAlves8039/angular-parking-frontend/blob/master/src/assets/images/screenshot1.png" /></p>
 <p align="center"> <img src="https://github.com/PauloAlves8039/angular-parking-frontend/blob/master/src/assets/images/screenshot2.png" /></p>
 <p align="center"> <img src="https://github.com/PauloAlves8039/angular-parking-frontend/blob/master/src/assets/images/screenshot3.png" /></p>
+<p align="center"> <img src="https://github.com/PauloAlves8039/angular-parking-frontend/blob/master/src/assets/images/screenshot4.png" /></p>
 
 - `Ticket`
-<p align="center"> <img src="https://github.com/PauloAlves8039/angular-parking-frontend/blob/master/src/assets/images/screenshot4.png" /></p>
+<p align="center"> <img src="https://github.com/PauloAlves8039/angular-parking-frontend/blob/master/src/assets/images/screenshot5.png" /></p>
 
 ## :boy: Author
 
