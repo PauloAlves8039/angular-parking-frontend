@@ -172,6 +172,16 @@ body {
   }
 }
 
+.animation-fade-in-downbig-1s {
+  animation: fadeInDownBig;
+  animation-duration: 1s;
+}
+
+.animation-bounce-in-1s {
+  animation: bounceIn;
+  animation-duration: 1s;
+}
+
 @media (max-width: 992px) {
   .table-responsive {
     table {
