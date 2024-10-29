@@ -37,12 +37,36 @@ That application is connected to the API: [Parking Backend](https://github.com/P
 - `JWT`
 - `Image Canva`
 - `Animate.css`
+- `Docker`
+
+## :white_check_mark: Technical Decisions
+
+- `Modular Architecture`: I chose to maintain this architecture to create a structure that supports the addition of new features..
+
+- `Adding Docker`: The goal is to enable the application to be used in different environments.
 
 ## :floppy_disk: Clone Repository
 
 ```bash
 git clone https://github.com/PauloAlves8039/angular-parking-frontend.git
 ```
+
+## :arrow_down: How to Use
+
+### Using Your Operating System:
+
+- Open the terminal and navigate to the `src` folder, then run the command `npm install` to install the application modules.
+
+- Once the previous step is completed, execute the command `ng s -o`  to start the application.
+
+- The application will automatically open at: http://localhost:4200/
+
+### Using Docker:
+
+- Navigate to the root of the project and run the command `docker-compose up` to create the application `container` and `image` in the `Docker` environment. 
+
+- After creating the environment navigate to: `http://localhost:4201 `
+
 ## :camera: Screenshots
 
 - `Application`
