@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  parking-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4201:4201"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start -- --host 0.0.0.0 --port 4201
